@@ -1,0 +1,70 @@
+MATLAB:
+	- Main Simulink
+	- Main MATLAB
+	- Modular Models:
+		- Reference Blocks:
+			- Sine Wave: Amplitude, Frequency, Offset
+			- Triangle Wave: Amplitude, Frequency, Offset
+			- Square Wave: Amplitude, Frequency, Offset, Duty Cycle
+			- Step: Amplitude, Delay
+			- Staircase: Initial Value, Final Value, Steps, Step Period
+			- Quantized Triangle Wave: Amplitude, Vertical Steps, Step Period
+		- Controller Blocks:
+			- PID
+			- PID + Compensation
+			- Feedback Linearisation	?
+			- Fuzzy Logic			?
+			- Optimal Control LQR		?
+		- Observer Blocks:
+			- Simple Lowpass Filter
+			- Simple Observer
+			- Kalman Filter
+			- Extended Kalman Filter	?
+			- Particle Filter 		?
+		- Motor Blocks:
+			- Block Diagram (nonlinear switch)				TEST
+			- Simscape (nonlinear switch)
+			- System Interface
+		- Sensor Blocks:
+			- AS5600 Position Sensor					DONE aggiungere rumore ?
+			- INA219 Current and Voltage Sensor				DONE sistemare enabling del rumore
+	- Scripts:
+		- Functions:
+			all the auxiliary functions, for examples to plot the data
+		- Parameters:
+			- AO3400 Parameters						DONE
+			- INA219 Parameters						DONE da aggiungere parametri
+			- IRF7307 Parameters						DONE
+			- Microcontroller Parameters					DONE da ricontrollare
+			- Motor Parameters						DONE aggiungere state space ?
+			- Miscellaneous Parameters				
+			- Conversion Constants 		?
+		- Tuning:
+			all the scripts for the tuning of the controllers/observers, 1 file per controller/observer
+	- Data:
+		all the experiment data TODO expand description
+	- Plots:
+		all the data plots
+		
+		
+KiCad Projects:
+	- Original Servo Controller Board Clone
+	- Prototype Servo Controller Board 
+	- Final Servo Controller Board
+	- STM32F103C8T6 Minimum Working Board
+
+PDFs:
+	- Datasheets:
+		- Original Board:
+			all the datasheets of components in the original board
+		- Smart Board:
+			all the datasheets of componentsin the new board
+	- Devboards Pinout:
+		ESP32 and STM32 blue pill pinouts
+
+Source Code:
+	- Main Code
+	- I2C Devices Modules
+	- Custom Modules
+	- Imported Modules
+	
