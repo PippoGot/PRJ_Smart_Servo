@@ -3,10 +3,11 @@
 slprj/
 **/*.slxc
 **/*.asv
-MODELS_AND_SIMULATIONS/*.bin
+**/*.bin
 **/*.elf
 **_ert_rtw/
 **/*.DS_Store
+**/*.original
 
 # Other
 

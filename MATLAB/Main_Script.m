@@ -19,7 +19,7 @@ wn = 100;
 csi = 1/sqrt(2);
 
 % PID Tuning
-PID;
+%PID;
 
 %% Change Simulink Model
 

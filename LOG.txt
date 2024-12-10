@@ -1,0 +1,25 @@
+10/12/2024
+
+- Si nota un immagazzinamento di energia nell'induttore dell'armatura 
+	-> si aggiungono 2 resistenze da 10k ai capi del motore per la dissipazione di tale energia, funziona
+	-> APPORTARE MODIFICHE ALLO SCHEMA CIRCUITALE
+
+- Si effettua una misura per la variazione standard del sensore INA219: 
+	si sostituisce il motore con una resistenza da 47 ohm (mantenendo le modifiche appena riportare)
+	si fornisce un gradino 5s basso e 5s alto
+	si acquisisce tensione e corrente 
+	si calcola la std per ciascun intervallo
+
+	-> dati salvati come MATLAB/DATA/INA219_std.mat
+	-> valori ottenuti: curr_std_off = 2.8mA, curr_std_on = 1.3mA, volt_std_off = 2.1mV, volt_std_on = 4.8mV 
+	-> APPORTARE MODIFICHE ALLO SCRIPT PARAMETRI INA219
+	-! si rammenta che i valori "on" comprendono rumore dovuto al PWM
+
+- Si notano glitch sulle misure, a volte posizione, corrente e tensione hanno degli impulsi molto elevati per un solo campione
+	-> si pensa sia dovuto a rumore generato dal segnale di alimentazione del motore e captato dai fili I2C
+	-! si rammenta di tenere lontani le rispettive linee per un corretto funzionamento dei sensori
+
+- Si nota una caduta di tensione media di circa 4.37V ai capi del carico (tensione media in periodo "on")
+	la corrente media nel carico è pari a 74.6mA di conseguenza la resistenza di carico e circa pari a 58.57ohm
+	da una misura con multimetro digitale sulla resistenza utilizzata essa risulta essere di 50ohm
+	
