@@ -14,12 +14,34 @@
 	-> valori ottenuti: curr_std_off = 2.8mA, curr_std_on = 1.3mA, volt_std_off = 2.1mV, volt_std_on = 4.8mV 
 	-> APPORTARE MODIFICHE ALLO SCRIPT PARAMETRI INA219
 	-! si rammenta che i valori "on" comprendono rumore dovuto al PWM
+	-> RIMANE POCO CHIARO SE SIA IL MODO CORRETT ODI MODELLARE IL RUMORE, VERIFICARE
 
 - Si notano glitch sulle misure, a volte posizione, corrente e tensione hanno degli impulsi molto elevati per un solo campione
 	-> si pensa sia dovuto a rumore generato dal segnale di alimentazione del motore e captato dai fili I2C
 	-! si rammenta di tenere lontani le rispettive linee per un corretto funzionamento dei sensori
 
-- Si nota una caduta di tensione media di circa 4.37V ai capi del carico (tensione media in periodo "on")
-	la corrente media nel carico è pari a 74.6mA di conseguenza la resistenza di carico e circa pari a 58.57ohm
-	da una misura con multimetro digitale sulla resistenza utilizzata essa risulta essere di 50ohm
+- Si misurano corrente e tensione di carico a comando massimo con la coppia di sensori INA219
+	tensione media ai capi del carico di circa 4.36V, confermata dal multimetro digitale
+	corrente media nel carico pari a 75mA, anch'essa confermata dal multimetro digitale
+
+- La misura di tensione suggerice che i canali dei MOSFET non siano completamente aperti
+	come conferma si prova a fornire ai MOSFET una tensione di gate direttamente dall'alimentazione
+	la nuova tensione misurata è di circa 4.73V, maggiore della precedente, tuttavia non quella attesa
+	ci si aspettano circa 4.97V sul carico, con MOSFET completamente aperti
 	
+	-> l'effetto potrebbe essere attribuito principalmente a due fattori:
+		1) tensione di gate per i MOSFET B e D proveniente direttamente dal microcontrollore (3.3V < 5V)
+		2) resistenze parassite dovute a saldature e/o fili troppo lunghi (5V - 4.73V)/93mA = 2.9ohm parassiti
+
+	-> AGGIUNGERE STADIO BUFFER TRA MICROCONTROLLORE E GATE B E D
+
+- Si aggiornano i parametri dei sensori INA219 e AS5600 con i valori di LSB, indirizzi di registri e quant'altro
+
+
+
+
+MODIFICHE AL CIRCUITO PER REV.2:
+- 10/12/2024  stadio buffer per MOSFET B e D
+- 10/12/2024  resistenze di pull down per motore
+- 10/12/2024  spostare linea I2C più in alto
+- 10/12/2024  aggiungere resistenze di filtro agli INA219 (10ohm)

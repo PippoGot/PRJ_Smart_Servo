@@ -23,4 +23,4 @@ csi = 1/sqrt(2);
 
 %% Change Simulink Model
 
-%% Start Simulation/Experiment
+%% Start SimulationExperiment
