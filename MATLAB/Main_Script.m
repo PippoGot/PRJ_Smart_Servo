@@ -14,12 +14,20 @@ motor_params;
 AS5600_params;
 INA219_params;
 
+% Sign function approximation
+lambda = 500;
+
 % Speed filter params
 wn = 100;
 csi = 1/sqrt(2);
 
+
+%% Controller Tuning
+
+% Optimal controller
+LQR;
+
 % PID Tuning
-%PID;
 
 %% Change Simulink Model
 

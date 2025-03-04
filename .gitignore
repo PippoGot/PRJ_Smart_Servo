@@ -8,6 +8,7 @@ slprj/
 **_ert_rtw/
 **/*.DS_Store
 **/*.original
+**/*.mldatx
 
 # Other
 

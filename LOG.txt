@@ -14,7 +14,7 @@
 	-> valori ottenuti: curr_std_off = 2.8mA, curr_std_on = 1.3mA, volt_std_off = 2.1mV, volt_std_on = 4.8mV 
 	-> APPORTARE MODIFICHE ALLO SCRIPT PARAMETRI INA219
 	-! si rammenta che i valori "on" comprendono rumore dovuto al PWM
-	-> RIMANE POCO CHIARO SE SIA IL MODO CORRETT ODI MODELLARE IL RUMORE, VERIFICARE
+	-> RIMANE POCO CHIARO SE SIA IL MODO CORRETTO DI MODELLARE IL RUMORE, VERIFICARE
 
 - Si notano glitch sulle misure, a volte posizione, corrente e tensione hanno degli impulsi molto elevati per un solo campione
 	-> si pensa sia dovuto a rumore generato dal segnale di alimentazione del motore e captato dai fili I2C
@@ -37,11 +37,25 @@
 
 - Si aggiornano i parametri dei sensori INA219 e AS5600 con i valori di LSB, indirizzi di registri e quant'altro
 
+11/12/2024
+
+- Si nota rumore nelle misure, soprattutto quando non c'è movimento (sia in tensione che in corrente che in posizione)
+	-> potrebbero essere dovuti al segnale PWM
+
+- Si nota che la tensione non varia granchè al variare del duty cycle
+	-> verificare che il duty cycle cambi come stabilito utilizzando l'oscilloscopio
+	-> provare con una generazione di PWM esterna al microcontrollore
+
+13/12/2024
+
+- Modifica per Rev.2:  stadio buffer per MOSFET B e D - ANNULLATA
+- Modifica per Rev.2:  aggiungere resistenze di filtro agli INA219 (10ohm) - AGGIUNTA
+- Modifica per Rev.2:  sostituire MOSFET con DRV8830 - AGGIUNTA
+
 
 
 
 MODIFICHE AL CIRCUITO PER REV.2:
-- 10/12/2024  stadio buffer per MOSFET B e D
 - 10/12/2024  resistenze di pull down per motore
 - 10/12/2024  spostare linea I2C più in alto
-- 10/12/2024  aggiungere resistenze di filtro agli INA219 (10ohm)
+- 13/12/2024  aggiornare PCB
