@@ -4,7 +4,7 @@ tmp = struct;
 % Circuit parameters
 INA219.Imax = 2.5;      % maximum expected current                          [A]
 INA219.Rs = 0.01;       % shunt resistor                                    [Ohm]
-INA219.Cs = 10e-8;      % filtering capacitor                               [pF]
+INA219.Cs = 100e-7;     % filtering capacitor                               [pF]
 
 % Device and register addresses
 INA219.DEV1_ADDR = 0x40;        % I2C address of device 1                   [uint8]
