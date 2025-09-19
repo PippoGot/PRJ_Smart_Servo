@@ -1,0 +1,8 @@
+../Core/Src/control.cpp:6:1:PIDController::PIDController(float, float, float, float)	1
+../Core/Src/control.cpp:12:7:float PIDController::compute(float)	7
+../Core/Src/control.cpp:49:6:void PIDController::reset()	1
+../Core/Src/control.cpp:54:6:void PIDController::setOutputLimits(float, float)	1
+../Core/Src/control.cpp:61:7:float PIDController::_clamp(float, float, float)	3
+../Core/Src/control.cpp:67:7:float PIDController::_limitOutput(float)	3
+../Core/Src/control.cpp:78:1:SWPIDController::SWPIDController(float, float, float, float)	1
+../Core/Src/control.cpp:83:7:float SWPIDController::compute(float, float)	4

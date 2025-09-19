@@ -1,61 +1,135 @@
-10/12/2024
+02/05/2025
 
-- Si nota un immagazzinamento di energia nell'induttore dell'armatura 
-	-> si aggiungono 2 resistenze da 10k ai capi del motore per la dissipazione di tale energia, funziona
-	-> APPORTARE MODIFICHE ALLO SCHEMA CIRCUITALE
+ISSUE 001 (SOLVED): PWM CONTROL SIGNAL FREQUENCY
 
-- Si effettua una misura per la variazione standard del sensore INA219: 
-	si sostituisce il motore con una resistenza da 47 ohm (mantenendo le modifiche appena riportare)
-	si fornisce un gradino 5s basso e 5s alto
-	si acquisisce tensione e corrente 
-	si calcola la std per ciascun intervallo
+Voltage accross the motor won't vary too much (how much?).
+The control signal of the H-bridge has frequency of 300kHz.
 
-	-> dati salvati come MATLAB/DATA/INA219_std.mat
-	-> valori ottenuti: curr_std_off = 2.8mA, curr_std_on = 1.3mA, volt_std_off = 2.1mV, volt_std_on = 4.8mV 
-	-> APPORTARE MODIFICHE ALLO SCRIPT PARAMETRI INA219
-	-! si rammenta che i valori "on" comprendono rumore dovuto al PWM
-	-> RIMANE POCO CHIARO SE SIA IL MODO CORRETTO DI MODELLARE IL RUMORE, VERIFICARE
+SOLUTION:
 
-- Si notano glitch sulle misure, a volte posizione, corrente e tensione hanno degli impulsi molto elevati per un solo campione
-	-> si pensa sia dovuto a rumore generato dal segnale di alimentazione del motore e captato dai fili I2C
-	-! si rammenta di tenere lontani le rispettive linee per un corretto funzionamento dei sensori
-
-- Si misurano corrente e tensione di carico a comando massimo con la coppia di sensori INA219
-	tensione media ai capi del carico di circa 4.36V, confermata dal multimetro digitale
-	corrente media nel carico pari a 75mA, anch'essa confermata dal multimetro digitale
-
-- La misura di tensione suggerice che i canali dei MOSFET non siano completamente aperti
-	come conferma si prova a fornire ai MOSFET una tensione di gate direttamente dall'alimentazione
-	la nuova tensione misurata è di circa 4.73V, maggiore della precedente, tuttavia non quella attesa
-	ci si aspettano circa 4.97V sul carico, con MOSFET completamente aperti
-	
-	-> l'effetto potrebbe essere attribuito principalmente a due fattori:
-		1) tensione di gate per i MOSFET B e D proveniente direttamente dal microcontrollore (3.3V < 5V)
-		2) resistenze parassite dovute a saldature e/o fili troppo lunghi (5V - 4.73V)/93mA = 2.9ohm parassiti
-
-	-> AGGIUNGERE STADIO BUFFER TRA MICROCONTROLLORE E GATE B E D
-
-- Si aggiornano i parametri dei sensori INA219 e AS5600 con i valori di LSB, indirizzi di registri e quant'altro
-
-11/12/2024
-
-- Si nota rumore nelle misure, soprattutto quando non c'è movimento (sia in tensione che in corrente che in posizione)
-	-> potrebbero essere dovuti al segnale PWM
-
-- Si nota che la tensione non varia granchè al variare del duty cycle
-	-> verificare che il duty cycle cambi come stabilito utilizzando l'oscilloscopio
-	-> provare con una generazione di PWM esterna al microcontrollore
-
-13/12/2024
-
-- Modifica per Rev.2:  stadio buffer per MOSFET B e D - ANNULLATA
-- Modifica per Rev.2:  aggiungere resistenze di filtro agli INA219 (10ohm) - AGGIUNTA
-- Modifica per Rev.2:  sostituire MOSFET con DRV8830 - AGGIUNTA
+A lower PWM frequency is tested. 
+- 10kHz works, but produces high pitch noise.
+- 20kHz works and has no noise audible. This is the solution accepted.
 
 
+ISSUE 002 (TO VERIFY): CURRENT SENSOR CALIBRATION
+
+For sensor calibration:
+- the motor is replaced with a (47ohm 10%) resistor.
+- a voltage staircase signal is imposed.
+- sensor data is collected, along with multimeter data.
+- the mean value for each step is computed.
+- measured resistance is computed with both datasets, then compared to the nominal value of the dummy component.
+- multimeter data returns an average resistance of 44.8571ohm (0.5954 variance), well inside tolerance boundaries.
+- sensor data returns an average resistance of 58.8294ohm (3.9547 variance), extremely far from tolerance boundaries.
+
+SOLUTION PROPOSED:
+
+Calibrate each sensor independently based on data readings:
+- calibrate the sensor as per datasheet instruction for first reading.
+- replace the motor with a known low tolerance resistor (50ohm 1%) or (parallel of two 100ohm 1%).
+- impose a staircase signal and acquire data.
+- compute measured resistance and check with known value.
+- if computed resistance is not in tolerance intervals compute new calibration value.
+- repeat from point 3 until good values are obtained.
+- sensor is calibrated.
+
+This procedure can be automated.
 
 
-MODIFICHE AL CIRCUITO PER REV.2:
-- 10/12/2024  resistenze di pull down per motore
-- 10/12/2024  spostare linea I2C più in alto
-- 13/12/2024  aggiornare PCB
+ISSUE 003 (TO VERIFY): ACTUATOR INPUT-OUTPUT CHARACTERISTIC
+
+When measuring voltage data with multimeter an inconsistence between input and output of the discrete component
+H-bridge is noticed.
+the relationship between input duty cycle and output voltage is not linear.
+
+SOLUTION PROPOSED:
+
+Replace the discrete component H-bridge with a more suited motor driver IC (DRV8830).
+
+
+ISSUE 004 (TO EXPLORE): CURRENT SENSOR DIFFERENCES
+
+The two different current sensors have a different amount of noise in the measurements. Find out why.
+
+
+IDEA 001 (TO EXPLORE): POSITION AND SPEED DIY ENCODER
+
+For low speed sensing, a 2 or 4 quadrature linear hall effect sensor (AH49E) circuit can be implemented.
+The voltage of the sensors can be acquired directly via microcontroller for position estimation.
+The voltage can be derivated physically with appropriate opamp circuittry and then acquired for speed estimation.
+
+This would complete the state observation.
+
+
+IDEA 002 (TO EXPLORE): SYSTEM IDENTIFICATION VALIDATION
+
+Acquire data for system identification from 
+- lab multimeter;
+- clean simulation;
+- noisy simulation;
+
+for comparison and validation of identification algorithms.
+
+
+TODO:
+
+Design the complete PCB with new modifications, order it and test:
+- sensor calibration;
+- motor voltage;
+- sensor readings;
+- hall sensors readings;
+
+Then, if sensor readings are correct, re-estimate the system parameters and update the model.
+Try both old estimation technique and SINDy algorithm for system identification.
+
+
+08/05/2025
+
+
+LOG:
+
+Modular models needed are built, automatic script simulation is implemented.
+Estimation algorithm are also implemented and tested. Results match perfectly for all motor models with no noise.
+
+IDEA 003 (TO EXPLORE): FULL PARAMETERS ESTIMATION
+
+For full automatic system identification, estimation procedure for La and Ra can be designed.
+
+With no movement (i.e. low voltage) read current and motor voltage at steady state, then estimate Ra.
+With current PID control, impose a triangle current signal, then estimate La.
+With current PID control, impose a triangle current signal, then estimate Ra and La using linear regression.
+
+
+TODO:
+
+Test SINDy algorithms for system identification.
+
+Understand hybrid control (switching PID controller).
+
+
+13/05/2025
+
+LOG:
+
+Tested some algorithms for parameters estimation in different situations.
+
+Algorithm with best performances (both with and without noise, i.e. real components models):
+
+- Simulate system. Triangle velocity reference with PID controller;
+- Acquire data;
+- Filter data with lowpass filter. wc = 2pi20, delta = 1/sqrt(2);
+- Reshape data and trim transient;
+- Least Square filtering: 
+	- divide data in periods;
+	- fit a line for each period;
+	- calculate mean offset and coefficient;
+	- reconstruct signal (single period);
+- Least Square Derivation:
+	- after filtering use the coefficient fo calculate derivative;
+	- construct derivative approximation;
+- Least Square estimation of parameters using the reconstructed signals;
+
+Algorithm performs well for all parameters except motor inductance (La) which seems to be estimated 
+correctly only with perfect measurement.
+

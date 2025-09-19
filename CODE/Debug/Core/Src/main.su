@@ -1,0 +1,42 @@
+../Core/Inc/i2c_register.hpp:37:3:I2C::IVirtualRegister::IVirtualRegister(uint8_t, uint8_t)	16	static
+../Core/Inc/i2c_register.hpp:45:20:const uint8_t I2C::IVirtualRegister::size() const	16	static
+../Core/Inc/i2c_register.hpp:46:20:const uint8_t I2C::IVirtualRegister::address() const	16	static
+../Core/Inc/i2c_register.hpp:65:6:I2C::RegisterMap::RegisterMap()	16	static
+../Core/Inc/i2c_register.hpp:67:11:bool I2C::RegisterMap::append(I2C::IVirtualRegister&)	24	static
+../Core/Inc/i2c_register.hpp:76:24:I2C::IVirtualRegister* I2C::RegisterMap::access(uint8_t)	24	static
+../Core/Inc/i2c_slave.hpp:13:3:I2C::Slave::Slave(I2C::RegisterMap&)	16	static
+../Core/Inc/i2c_slave.hpp:24:8:void I2C::Slave::onAddrMatch(uint8_t)	24	static
+../Core/Inc/i2c_slave.hpp:52:8:void I2C::Slave::onReceiveComplete()	24	static
+../Core/Inc/i2c_slave.hpp:71:8:void I2C::Slave::onTransmitComplete()	16	static
+../Core/Inc/i2c_slave.hpp:75:8:void I2C::Slave::onListenComplete()	16	static
+../Core/Inc/i2c_slave.hpp:79:8:void I2C::Slave::onError()	24	static
+../Core/Inc/i2c_slave.hpp:104:8:void I2C::Slave::processReceivedData()	16	static
+../Core/Inc/AS5600.hpp:29:2:AS5600::AS5600(uint8_t, uint32_t)	24	static
+../Core/Inc/DRV8870.hpp:36:2:DRV8870::DRV8870(uint32_t, uint32_t, uint16_t)	24	static
+../Core/Inc/i2c_register.hpp:42:11:I2C::IVirtualRegister::~IVirtualRegister()	16	static
+../Core/Inc/i2c_register.hpp:42:11:virtual I2C::IVirtualRegister::~IVirtualRegister()	16	static
+../Core/Inc/i2c_register.hpp:94:11:I2C::VirtualRegister<float>::~VirtualRegister()	16	static
+../Core/Inc/i2c_register.hpp:94:11:virtual I2C::VirtualRegister<float>::~VirtualRegister()	16	static
+../Core/Inc/i2c_register.hpp:94:11:I2C::VirtualRegister<short unsigned int>::~VirtualRegister()	16	static
+../Core/Inc/i2c_register.hpp:94:11:virtual I2C::VirtualRegister<short unsigned int>::~VirtualRegister()	16	static
+../Core/Inc/i2c_register.hpp:94:11:I2C::VirtualRegister<unsigned char>::~VirtualRegister()	16	static
+../Core/Inc/i2c_register.hpp:94:11:virtual I2C::VirtualRegister<unsigned char>::~VirtualRegister()	16	static
+../Core/Inc/AS5600.hpp:20:7:AS5600::~AS5600()	16	static
+../Core/Inc/MG996R.hpp:29:2:MG996R::MG996R()	24	static
+../Core/Src/main.cpp:63:17:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*)	16	static
+../Core/Src/main.cpp:73:7:void HAL_I2C_ListenCpltCallback(I2C_HandleTypeDef*)	16	static
+../Core/Src/main.cpp:78:7:void HAL_I2C_AddrCallback(I2C_HandleTypeDef*, uint8_t, uint16_t)	16	static
+../Core/Src/main.cpp:83:7:void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef*)	16	static
+../Core/Src/main.cpp:88:7:void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef*)	16	static
+../Core/Src/main.cpp:93:7:void HAL_I2C_ErrorCallback(I2C_HandleTypeDef*)	16	static
+../Core/Src/main.cpp:104:5:int main()	16	static
+../Core/Src/main.cpp:163:6:void SystemClock_Config()	88	static
+../Core/Src/main.cpp:212:6:void Error_Handler()	4	static,ignoring_inline_asm
+../Core/Inc/i2c_register.hpp:101:6:I2C::VirtualRegister<T>::VirtualRegister(uint8_t, I2C::RegisterMap&) [with T = float]	24	static
+../Core/Inc/i2c_register.hpp:101:6:I2C::VirtualRegister<T>::VirtualRegister(uint8_t, I2C::RegisterMap&) [with T = short unsigned int]	24	static
+../Core/Inc/i2c_register.hpp:101:6:I2C::VirtualRegister<T>::VirtualRegister(uint8_t, I2C::RegisterMap&) [with T = unsigned char]	24	static
+../Core/Src/main.cpp:221:1:void __static_initialization_and_destruction_0()	8	static
+../Core/Inc/MG996R.hpp:23:7:MG996R::~MG996R()	16	static
+../Core/Src/main.cpp:221:1:void __static_initialization_and_destruction_1()	8	static
+../Core/Src/main.cpp:221:1:cpp)	8	static
+../Core/Src/main.cpp:221:1:cpp)	8	static

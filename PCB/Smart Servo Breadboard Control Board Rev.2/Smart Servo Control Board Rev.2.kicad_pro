@@ -370,7 +370,7 @@
         "schematic_color": "rgba(0, 0, 0, 0.000)",
         "track_width": 0.2,
         "via_diameter": 0.4,
-        "via_drill": 0.2,
+        "via_drill": 0.3,
         "wire_width": 6.0
       },
       {
@@ -387,9 +387,7 @@
           "+5V",
           "H-Bridge 1",
           "H-Bridge 2",
-          "ISENSE",
-          "I_SENS_1 -",
-          "I_SENS_2 -"
+          "I_SENS_1 -"
         ],
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
@@ -405,7 +403,6 @@
     "net_colors": {
       "+3V3": "rgb(255, 115, 0)",
       "+5V": "rgb(255, 0, 26)",
-      "ISENSE": "rgb(0, 255, 22)",
       "SCL1": "rgb(255, 0, 231)",
       "SDA1": "rgb(0, 229, 255)"
     }

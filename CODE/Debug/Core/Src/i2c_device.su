@@ -1,0 +1,7 @@
+../Core/Inc/i2c_device.hpp:139:15:void I2C::Device::init(I2C_HandleTypeDef*)	16	static
+../Core/Src/i2c_device.cpp:5:14:std::string I2C::busScan(I2C_HandleTypeDef*)	40	static
+../Core/Src/i2c_device.cpp:35:2:I2C::Device::Device(uint8_t, uint32_t)	24	static
+../Core/Src/i2c_device.cpp:43:2:I2C::Device::~Device()	16	static
+../Core/Src/i2c_device.cpp:52:20:HAL_StatusTypeDef I2C::Device::acquireBus()	16	static
+../Core/Src/i2c_device.cpp:63:7:void I2C::Device::releaseBus()	16	static
+../Core/Src/i2c_device.cpp:69:7:bool I2C::Device::isConnected()	24	static

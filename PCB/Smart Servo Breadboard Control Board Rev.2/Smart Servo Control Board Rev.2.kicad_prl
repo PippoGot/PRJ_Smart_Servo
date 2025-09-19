@@ -42,7 +42,6 @@
       14,
       15,
       16,
-      17,
       18,
       19,
       20,
@@ -63,7 +62,7 @@
       36
     ],
     "visible_layers": "7fc3fff_80000007",
-    "zone_display_mode": 0
+    "zone_display_mode": 1
   },
   "meta": {
     "filename": "Smart Servo Control Board Rev.2.kicad_prl",

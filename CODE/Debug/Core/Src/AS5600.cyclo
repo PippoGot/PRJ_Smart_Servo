@@ -1,0 +1,18 @@
+../Core/Src/AS5600.cpp:6:19:HAL_StatusTypeDef AS5600::digitalAngle(uint16_t*, DigitalAngle)	3
+../Core/Src/AS5600.cpp:17:19:HAL_StatusTypeDef AS5600::analogAngle(float*, AngleUnit)	3
+../Core/Src/AS5600.cpp:38:19:HAL_StatusTypeDef AS5600::powerMode(PowerModeConfig*)	1
+../Core/Src/AS5600.cpp:52:19:HAL_StatusTypeDef AS5600::hysteresis(HysteresisConfig*)	1
+../Core/Src/AS5600.cpp:66:19:HAL_StatusTypeDef AS5600::outputMode(OutputModeConfig*)	1
+../Core/Src/AS5600.cpp:80:19:HAL_StatusTypeDef AS5600::pwmFrequency(PWMFrequencyConfig*)	1
+../Core/Src/AS5600.cpp:94:19:HAL_StatusTypeDef AS5600::slowFilter(SlowFilterConfig*)	1
+../Core/Src/AS5600.cpp:108:19:HAL_StatusTypeDef AS5600::fastFilter(FastFilterConfig*)	1
+../Core/Src/AS5600.cpp:122:19:HAL_StatusTypeDef AS5600::watchdog(WatchdogConfig*)	1
+../Core/Src/AS5600.cpp:140:6:bool AS5600::magnetDetected()	3
+../Core/Src/AS5600.cpp:152:6:bool AS5600::magnetWeak()	3
+../Core/Src/AS5600.cpp:164:6:bool AS5600::magnetStrong()	3
+../Core/Src/AS5600.cpp:176:19:HAL_StatusTypeDef AS5600::magnetStatus(MagnetStatus*)	1
+../Core/Inc/i2c_device.hpp:171:21:HAL_StatusTypeDef I2C::Device::read(uint8_t, T*, byte::EndianType) [with T = short unsigned int]	3
+../Core/Inc/i2c_device.hpp:171:21:HAL_StatusTypeDef I2C::Device::read(uint8_t, T*, byte::EndianType) [with T = unsigned char]	3
+../Core/Inc/i2c_device.hpp:245:21:HAL_StatusTypeDef I2C::Device::maskedRead(uint8_t, T, T*, byte::EndianType) [with T = unsigned char]	2
+../Core/Inc/byte_utils.hpp:41:21:constexpr T byte::concat(const uint8_t*, EndianType) [with T = short unsigned int]	3
+../Core/Inc/byte_utils.hpp:41:21:constexpr T byte::concat(const uint8_t*, EndianType) [with T = unsigned char]	3

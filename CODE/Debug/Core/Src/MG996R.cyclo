@@ -1,0 +1,11 @@
+../Core/Inc/i2c_slave.hpp:19:8:void I2C::Slave::init(I2C_HandleTypeDef*)	1
+../Core/Inc/i2c_device.hpp:139:15:void I2C::Device::init(I2C_HandleTypeDef*)	1
+../Core/Inc/AS5600.hpp:304:14:bool AS5600::startPosition(uint16_t)	1
+../Core/Inc/AS5600.hpp:315:14:bool AS5600::stopPosition(uint16_t)	1
+../Core/Inc/control.hpp:69:8:float SWPIDController::compute(uint16_t, uint16_t, float)	1
+../Core/Src/MG996R.cpp:4:6:void MG996R::init(I2C_HandleTypeDef*, I2C_HandleTypeDef*, TIM_HandleTypeDef*, TIM_HandleTypeDef*)	1
+../Core/Src/MG996R.cpp:49:6:void MG996R::controlLoop()	5
+../Core/Inc/i2c_device.hpp:207:21:HAL_StatusTypeDef I2C::Device::write(uint8_t, T, byte::EndianType) [with T = short unsigned int]	2
+../Core/Inc/i2c_register.hpp:111:11:void I2C::VirtualRegister<T>::typedSet(T) [with T = short unsigned int]	1
+../Core/Inc/i2c_register.hpp:106:8:T I2C::VirtualRegister<T>::typedGet() const [with T = short unsigned int]	1
+../Core/Inc/byte_utils.hpp:61:24:constexpr void byte::split(T, uint8_t*, EndianType) [with T = short unsigned int]	3
