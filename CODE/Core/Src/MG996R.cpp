@@ -15,7 +15,7 @@ void MG996R::init(
 
 
 	// Slave setup
-	slave.init(_external_i2c_handle);
+	slave.init(_external_i2c_handle, DefaultSettings::SlaveAddress);
 
 
 	// Encoder setup
@@ -31,7 +31,10 @@ void MG996R::init(
 
 
 	// Controller setup
-	_controller.setOutputLimits(DefaultSettings::OutputMin, DefaultSettings::OutputMax);
+	_controller.changeParameter(SWPID::ControllerParam::AntiwindupMax, DefaultSettings::AntiwindupMax);
+	_controller.changeParameter(SWPID::ControllerParam::AntiwindupMin, DefaultSettings::AntiwindupMin);
+	_controller.changeParameter(SWPID::ControllerParam::OutputMax, DefaultSettings::OutputMax);
+	_controller.changeParameter(SWPID::ControllerParam::OutputMin, DefaultSettings::OutputMin);
 
 
 	// Driver setup
@@ -42,8 +45,64 @@ void MG996R::init(
 	HAL_TIM_Base_Start_IT(_control_loop_timer_handle);
 
 
+	// Bind callbacks
+	bindCallbacks();
+
+
 	// Toggle init flag
 	_isInit = true;
+}
+
+void MG996R::bindCallbacks() {
+	// Controller Parameters Callbacks
+	regProportionalGain.bind([this]() {
+		_controller.changeParameter(
+				SWPID::ControllerParam::ProportionalGain,
+				regProportionalGain.typedGet());
+	});
+
+	regIntegralGain.bind([this]() {
+		_controller.changeParameter(
+				SWPID::ControllerParam::IntegralGain,
+				regIntegralGain.typedGet());
+	});
+
+	regDerivativeGain.bind([this]() {
+		_controller.changeParameter(
+				SWPID::ControllerParam::DerivativeGain,
+				regDerivativeGain.typedGet());
+	});
+
+	regAntiwindupMax.bind([this]() {
+		_controller.changeParameter(
+				SWPID::ControllerParam::AntiwindupMax,
+				regAntiwindupMax.typedGet());
+	});
+
+	regAntiwindupMin.bind([this]() {
+		_controller.changeParameter(
+				SWPID::ControllerParam::AntiwindupMin,
+				regAntiwindupMin.typedGet());
+	});
+
+	regOutputMax.bind([this]() {
+		_controller.changeParameter(
+				SWPID::ControllerParam::OutputMax,
+				regOutputMax.typedGet());
+	});
+
+	regOutputMin.bind([this]() {
+		_controller.changeParameter(
+				SWPID::ControllerParam::OutputMin,
+				regOutputMin.typedGet());
+	});
+
+	// Encoder Configuration Callbacks
+	regZeroPosition.bind([this]() {	_encoder.startPosition(regZeroPosition.typedGet());	});
+	regStopPosition.bind([this]() {	_encoder.stopPosition(regStopPosition.typedGet()); });
+
+	// Slave Configuration
+	regDeviceAddress.bind([this]() { slave.requestAddressChange(regDeviceAddress.typedGet()); });
 }
 
 void MG996R::controlLoop() {
@@ -52,11 +111,14 @@ void MG996R::controlLoop() {
 
 	// Loop variables
 	HAL_StatusTypeDef status;
-	uint16_t current_position;
+	uint16_t current_reading;
+	int32_t current_position;
 
 	// Position reading (extend to sensor reading)
-	status = _encoder.digitalAngle(&current_position);
+	status = _encoder.digitalAngle(&current_reading);
+
 	if (status == HAL_OK) {
+		current_position = _unwrapper.update(current_reading);
 		regActualPosition.typedSet(current_position);
 	}
 	else {
@@ -64,13 +126,13 @@ void MG996R::controlLoop() {
 	}
 
 	// Compute control input
-	float u_PID = _controller.compute(regDesiredPosition.typedGet(), regActualPosition.typedGet(), PI / 4096.0f);
+	float reference = regDesiredPosition.typedGet() * PI / 4096.0f;
+	float feedback = regActualPosition.typedGet() * PI / 4096.0f;
 
-	// Clamp control input
-	if (u_PID > 1.0f) u_PID = 1.0f;
-	else if (u_PID < -1.0f) u_PID = -1.0f;
+	float u_PID = _controller.step(reference, feedback);
+	regDutyCycle.typedSet(static_cast<int32_t>(1024 * u_PID));
 
 	// Set driver duty cycle
-	_driver.duty(u_PID, DRV8870::StopMode::BRAKE);
+	_driver.duty(-u_PID, DRV8870::StopMode::BRAKE);
 }
 

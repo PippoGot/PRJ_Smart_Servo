@@ -24,33 +24,60 @@
 #include <cstdint>
 #include <cstddef>
 #include <cstring>
-
+#include <functional>
 
 
 namespace I2C {
 
 	#define MAX_REGISTERS 256
 
+	enum class RegisterMode : uint8_t {
+		ReadWrite,
+		ReadOnly
+	};
+
 
 	class IVirtualRegister {
 	public:
-		IVirtualRegister(uint8_t addr, uint8_t size) : _address(addr), _size(size) {
-			content = new uint8_t[_size];
-			std::memset(content, 0, _size);
+		IVirtualRegister(uint8_t addr, uint8_t size, RegisterMode mode = RegisterMode::ReadWrite)
+		  :	_address(addr), _size(size), _mode(mode), _content(new uint8_t[_size]) {
+			std::memset(_content, 0, _size);
 		}
 
-		virtual ~IVirtualRegister() = default;
+		virtual ~IVirtualRegister() {
+			delete[] _content;
+		}
 
 
 	    const uint8_t size() const { return _size; }
 	    const uint8_t address() const { return _address; }
+	    const RegisterMode mode() const { return _mode; }
 
+	    uint8_t* rawRead() { return _content; }
 
-		uint8_t* content;
+	    virtual bool rawWrite(const uint8_t* data, size_t len) {
+	    	if (_mode == RegisterMode::ReadOnly) return false;
+	    	if (len > _size) return false;
+
+	    	std::memcpy(_content, data, len);
+
+	    	if (_onChange) _onChange();
+	    	return true;
+	    }
+
+	    void bind(std::function<void()> cb) {
+	    	_onChange = cb;
+	    }
+
 
 	protected:
 		const uint8_t _address;
 		const uint8_t _size;
+		const RegisterMode _mode;
+
+		uint8_t* _content;
+
+		std::function<void()> _onChange;
 	};
 
 
@@ -95,19 +122,26 @@ namespace I2C {
     public:
 
     	// --- Constructor
-    	VirtualRegister(uint8_t addr) : IVirtualRegister(addr, sizeof(T)) {}
+    	VirtualRegister(uint8_t addr, RegisterMode mode = RegisterMode::ReadWrite)
+    		: IVirtualRegister(addr, sizeof(T), mode) {}
 
 
-    	VirtualRegister(uint8_t addr, RegisterMap& map) : IVirtualRegister(addr, sizeof(T)) {
+    	VirtualRegister(uint8_t addr, RegisterMap& map, RegisterMode mode = RegisterMode::ReadWrite)
+    		: IVirtualRegister(addr, sizeof(T), mode) {
     		map.append(*this);
     	}
 
 
     	T typedGet() const {
     		T value{};
-    		std::memcpy(&value, content, _size);
+    		std::memcpy(&value, _content, _size);
     		return value;
     	}
-    	void typedSet(T value) { std::memcpy(content, &value, _size); }
+
+    	void typedSet(T value) {
+    		std::memcpy(_content, &value, _size);
+
+    		if (this -> _onChange) this -> _onChange();
+    	}
     };
 }

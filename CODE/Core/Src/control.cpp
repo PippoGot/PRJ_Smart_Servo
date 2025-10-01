@@ -1,106 +1,110 @@
 #include "control.hpp"
 
 
-// --- Controller constructor -----------------------------------------------------------
-
-PIDController::PIDController(float dt, float Kp, float Ki, float Kd) :
-		_dt(dt), _Kp(Kp), _Ki(Ki), _Kd(Kd) {}
-
-
-// --- Controller core method -----------------------------------------------------------
-
-float PIDController::compute(float e_k) {
-	// Proportional
-	float P = _Kp * e_k;
-
-	// Integral (cumulative and anti-windup)
-	float I_candidate = _integral + (_Ki * _dt * (e_k + _e_k1)) / 2.0f;
-
-	// Derivative (discrete derivative filter)
-    float D = _Kd * (e_k - _e_k1) / _dt;
-
-    //_antiWindupClamp(e_k, P, D);
-	//float I = _integral;
-
-    // Candidate output
-    float u_raw = P + I_candidate + D;
-
-    // Saturation
-    float u_sat = _clamp(u_raw, _out_min, _out_max);
-
-    // Clamping logic
-    bool update_integrator = true;
-    if (u_raw != u_sat) {
-    	if ((u_sat >= _out_max && e_k > 0) || (u_sat <= _out_min && e_k < 0)) {
-    		update_integrator = false;
-    	}
-    }
-
-    if (update_integrator) {
-    	_integral = I_candidate;
-    }
-
-    // Update error and return
-    _e_k1 = e_k;
-
-    return u_sat;
+void SWPID::reset() {
+	_previous_state = 0.0f;
+	_previous_ref = 0.0f;
+	_integrator = 0.0f;
+	_switching_state = SystemState::StickSlip;
 }
 
-void PIDController::reset(void) {
-	_integral = 0.0f;
-	_e_k1 = 0.0f;
-}
+float SWPID::step(float reference, float feedback) {
+	// Velocity calculation
+	float velocity = (feedback - _previous_state) / _dt;
 
-void PIDController::setOutputLimits(float min, float max) {
-	_out_min = min;
-	_out_max = max;
-}
+	// Tracking error
+	float error = reference - feedback;
 
-// --- Controller helper methods --------------------------------------------------------
+	// Proportional and Integral Action
+	float sigma = _Ki * error;
+	float PI = (error + _integrator) * _Kp;
 
-float PIDController::_clamp(float x, float lo, float hi) {
-	if (x < lo) return lo;
-	if (x > hi) return hi;
-	return x;
-}
+	// Internal saturation (anti-windup)
+	float phi = std::clamp(PI, _windup_min, _windup_max);
 
-float PIDController::_limitOutput(float input) {
-	if (input > _out_max) return _out_max;
-	if (input < _out_min) return _out_min;
-	return input;
-}
-
-
-// --------------------------------------------- SWPIDController class implementation ---
-
-// --- Controller constructor -----------------------------------------------------------
-
-SWPIDController::SWPIDController(float dt, float Kp, float Ki, float Kd) :
-		PIDController(dt, Kp, Ki, 0.0f) {}
-
-// --- Controller core method (partial override) ----------------------------------------
-
-float SWPIDController::compute(float x_ref, float x_k) {
-	// Pre operations
-	float velocity = (x_k - _x_k1) / _dt;
-	float e_k = x_ref - x_k;
-
-	float sigma = _Ki * e_k;
-
-	// Superclass method call
-	float phi = PIDController::compute(e_k);
-
-	// Post operations
-	if (SYSTEM_STATE::STICK_SLIP == _st && 0 >= sigma*phi) {
-		// Transition to OVERSHOOT
+	// Switching logic
+	if ((_switching_state == SystemState::StickSlip) && (sigma * phi <= 0.0f)) {
 		phi = -phi;
-		_st = SYSTEM_STATE::OVERSHOOT;
+		_switching_state = SystemState::Overshoot;
 	}
-	else if (SYSTEM_STATE::OVERSHOOT && 0 <= velocity*phi) {
-		// Transition to STICK_SLIP
+	else if ((_switching_state == SystemState::Overshoot) && (velocity * phi >= 0.0f)) {
 		phi = sigma * _Kp / _Ki;
-		_st = SYSTEM_STATE::STICK_SLIP;
+		_switching_state = SystemState::StickSlip;
 	}
 
-	return phi - _Kd * velocity;
+	// Derivative correction
+	float output = phi - _Kd * velocity;
+
+	// Output saturation
+	output = std::clamp(output, _out_min, _out_max);
+
+	// Output dead-banding
+	float filt_reference = (reference - (-0.0004 * _previous_ref)) / _dt;
+	float dot_reference = 0.6 * (filt_reference - _previous_ref);
+
+	if ((std::abs(dot_reference) < 0.01) && (std::abs(error) <= 3 * 3.1415 / 4096.0f)) {
+		output = 0.0f;
+		_integrator = 0.0f;
+	}
+
+	// State update
+	_previous_state = feedback;
+	_previous_ref = filt_reference;
+	_integrator += error * _Ki * _dt;
+
+	// Return
+	return output;
+}
+
+void SWPID::changeParameter(SWPID::ControllerParam param, float new_value) {
+	switch (param) {
+	case ControllerParam::ProportionalGain:
+		_Kp = new_value;
+		break;
+	case ControllerParam::IntegralGain:
+		_Ki = new_value;
+		break;
+	case ControllerParam::DerivativeGain:
+		_Kd = new_value;
+		break;
+	case ControllerParam::AntiwindupMax:
+		_windup_max = new_value;
+		break;
+	case ControllerParam::AntiwindupMin:
+		_windup_min = new_value;
+		break;
+	case ControllerParam::OutputMax:
+		_out_max = new_value;
+		break;
+	case ControllerParam::OutputMin:
+		_out_min = new_value;
+		break;
+	}
+}
+
+
+int32_t AngleUnwrapper::update(uint16_t raw_value) {
+    if (_first_read) {
+        _previous_raw = raw_value;
+        _first_read = false;
+        return static_cast<int32_t>(raw_value);
+    }
+
+    int32_t delta = static_cast<int32_t>(raw_value) - static_cast<int32_t>(_previous_raw);
+
+    // Correggi i salti dovuti al wrap
+    if (delta >  static_cast<int32_t>(_max_value) / 2) {
+        // Salto indietro (da 0 a 4095)
+        _turns--;
+    } else if (delta < -static_cast<int32_t>(_max_value) / 2) {
+        // Salto avanti (da 4095 a 0)
+        _turns++;
+    }
+
+    _previous_raw = raw_value;
+
+    // Posizione assoluta = valore attuale + giri accumulati
+    int32_t absolute = static_cast<int32_t>(raw_value) + _turns * static_cast<int32_t>(_max_value);
+
+    return absolute;
 }

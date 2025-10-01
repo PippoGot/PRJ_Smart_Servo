@@ -9,77 +9,84 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <cmath>
 
 
-// -------------------------------------------------- PIDController class declaration ---
-
-class PIDController {
-
+class SWPID {
 public:
 
-	// --- Controller constructor -------------------------------------------------------
-
-	PIDController(float dt, float Kp, float Ki, float Kd);
-
-	// --- Filter core method -----------------------------------------------------------
-
-	float compute(float e_k);
-	void reset(void);
-	void setOutputLimits(float min, float max);
-
-protected:
-
-	// --- Helper methods ---------------------------------------------------------------
-
-	float _clamp(float x, float lo, float hi);
-	float _limitOutput(float input);
-
-	// --- Controller variables ---------------------------------------------------------
-
-	// Time step
-	float _dt;
-
-	// Gains
-	float _Kp, _Ki, _Kd;
-
-	// State variables
-	float _integral = 0.0f;
-	float _e_k1 = 0.0f;
-
-	// Output saturation
-	float _out_min = -1e6f;
-	float _out_max = 1e6f;
-
-};
+	SWPID(float dt, float Kp, float Ki, float Kd)
+		: _dt(dt), _Kp(Kp), _Ki(Ki), _Kd(Kd),
+		  _windup_max(1e6f), _windup_min(-1e6f), _out_max(1e6f), _out_min(-1e6f)
+	{
+		reset();
+	}
 
 
-// ------------------------------------------------ SWPIDController class declaration ---
+	void reset();
 
-class SWPIDController : public PIDController {
 
-public:
+	float step(float reference, float feedback);
 
-	// --- Controller constructor -------------------------------------------------------
 
-	SWPIDController(float dt, float Kp, float Ki, float Kd);
+	enum class ControllerParam : uint8_t {
+		ProportionalGain,
+		IntegralGain,
+		DerivativeGain,
 
-	// --- Controller core method -------------------------------------------------------
+		AntiwindupMax,
+		AntiwindupMin,
 
-	float compute(float x_ref, float x_k);
-	float compute(uint16_t x_ref, uint16_t x_k, float convert) { return compute(convert * x_ref, convert * x_k); }
-
-protected:
-
-	// --- Controller states ------------------------------------------------------------
-
-	enum SYSTEM_STATE : int {
-		STICK_SLIP = 0,
-		OVERSHOOT = 1,
+		OutputMax,
+		OutputMin,
 	};
 
-	// --- Controller variables ---------------------------------------------------------
+	void changeParameter(ControllerParam param, float new_value);
 
-	float _x_k1 = 0.0f;
-	SYSTEM_STATE _st = STICK_SLIP;
 
+protected:
+
+	// Controller parameters
+	float _dt;
+
+	float _Kp;
+	float _Ki;
+	float _Kd;
+
+	float _windup_max;
+	float _windup_min;
+
+	float _out_max;
+	float _out_min;
+
+
+	// State variables
+	enum class SystemState : int8_t {
+		StickSlip = -1,
+		Overshoot = 1,
+	};
+
+	float _previous_state;
+	float _previous_ref;
+	float _integrator;
+	SystemState _switching_state;
 };
+
+
+
+class AngleUnwrapper {
+public:
+    AngleUnwrapper(uint16_t max_value = 4096)
+        : _max_value(max_value), _previous_raw(0), _turns(0), _first_read(true) {}
+
+
+    int32_t update(uint16_t raw_value);
+
+
+private:
+    int _max_value;
+    int _previous_raw;
+    long _turns;
+    bool _first_read;
+};
+

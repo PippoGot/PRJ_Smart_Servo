@@ -1,26 +1,36 @@
-../Core/Inc/i2c_register.hpp:37:3:I2C::IVirtualRegister::IVirtualRegister(uint8_t, uint8_t)	1
-../Core/Inc/i2c_register.hpp:45:20:const uint8_t I2C::IVirtualRegister::size() const	1
-../Core/Inc/i2c_register.hpp:46:20:const uint8_t I2C::IVirtualRegister::address() const	1
-../Core/Inc/i2c_register.hpp:65:6:I2C::RegisterMap::RegisterMap()	1
-../Core/Inc/i2c_register.hpp:67:11:bool I2C::RegisterMap::append(I2C::IVirtualRegister&)	1
-../Core/Inc/i2c_register.hpp:76:24:I2C::IVirtualRegister* I2C::RegisterMap::access(uint8_t)	3
-../Core/Inc/i2c_slave.hpp:13:3:I2C::Slave::Slave(I2C::RegisterMap&)	1
-../Core/Inc/i2c_slave.hpp:24:8:void I2C::Slave::onAddrMatch(uint8_t)	4
-../Core/Inc/i2c_slave.hpp:52:8:void I2C::Slave::onReceiveComplete()	3
-../Core/Inc/i2c_slave.hpp:71:8:void I2C::Slave::onTransmitComplete()	1
-../Core/Inc/i2c_slave.hpp:75:8:void I2C::Slave::onListenComplete()	1
-../Core/Inc/i2c_slave.hpp:79:8:void I2C::Slave::onError()	3
-../Core/Inc/i2c_slave.hpp:104:8:void I2C::Slave::processReceivedData()	1
+C:\ST\STM32CubeIDE_1.13.2\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344\tools\bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/include/c++/13.3.1/bits/std_function.h:241:5:std::_Function_base::~_Function_base()	2
+C:\ST\STM32CubeIDE_1.13.2\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344\tools\bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/include/c++/13.3.1/bits/std_function.h:247:10:bool std::_Function_base::_M_empty() const	1
+C:\ST\STM32CubeIDE_1.13.2\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344\tools\bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/include/c++/13.3.1/bits/std_function.h:334:11:std::function<void()>::~function()	1
+../Core/Inc/i2c_register.hpp:42:3:I2C::IVirtualRegister::IVirtualRegister(uint8_t, uint8_t, I2C::RegisterMode)	1
+../Core/Inc/i2c_register.hpp:47:11:I2C::IVirtualRegister::~IVirtualRegister()	2
+../Core/Inc/i2c_register.hpp:47:11:virtual I2C::IVirtualRegister::~IVirtualRegister()	1
+../Core/Inc/i2c_register.hpp:52:20:const uint8_t I2C::IVirtualRegister::size() const	1
+../Core/Inc/i2c_register.hpp:53:20:const uint8_t I2C::IVirtualRegister::address() const	1
+../Core/Inc/i2c_register.hpp:56:15:uint8_t* I2C::IVirtualRegister::rawRead()	1
+../Core/Inc/i2c_register.hpp:58:19:virtual bool I2C::IVirtualRegister::rawWrite(const uint8_t*, size_t)	4
+../Core/Inc/i2c_register.hpp:92:6:I2C::RegisterMap::RegisterMap()	1
+../Core/Inc/i2c_register.hpp:94:11:bool I2C::RegisterMap::append(I2C::IVirtualRegister&)	1
+../Core/Inc/i2c_register.hpp:103:24:I2C::IVirtualRegister* I2C::RegisterMap::access(uint8_t)	3
+../Core/Inc/i2c_slave.hpp:15:3:I2C::Slave::Slave(I2C::RegisterMap&)	1
+../Core/Inc/i2c_slave.hpp:46:8:void I2C::Slave::onAddrMatch(uint8_t)	4
+../Core/Inc/i2c_slave.hpp:74:8:void I2C::Slave::onReceiveComplete()	4
+../Core/Inc/i2c_slave.hpp:98:8:void I2C::Slave::onTransmitComplete()	1
+../Core/Inc/i2c_slave.hpp:104:8:void I2C::Slave::onListenComplete()	1
+../Core/Inc/i2c_slave.hpp:109:8:void I2C::Slave::onError()	3
+../Core/Inc/i2c_slave.hpp:138:8:void I2C::Slave::processReceivedData()	2
+../Core/Inc/i2c_slave.hpp:144:8:void I2C::Slave::applyPendingAddress()	6
 ../Core/Inc/AS5600.hpp:29:2:AS5600::AS5600(uint8_t, uint32_t)	1
+../Core/Inc/control.hpp:18:2:SWPID::SWPID(float, float, float, float)	1
+../Core/Inc/control.hpp:79:5:AngleUnwrapper::AngleUnwrapper(uint16_t)	1
 ../Core/Inc/DRV8870.hpp:36:2:DRV8870::DRV8870(uint32_t, uint32_t, uint16_t)	1
-../Core/Inc/i2c_register.hpp:42:11:I2C::IVirtualRegister::~IVirtualRegister()	1
-../Core/Inc/i2c_register.hpp:42:11:virtual I2C::IVirtualRegister::~IVirtualRegister()	1
-../Core/Inc/i2c_register.hpp:94:11:I2C::VirtualRegister<float>::~VirtualRegister()	1
-../Core/Inc/i2c_register.hpp:94:11:virtual I2C::VirtualRegister<float>::~VirtualRegister()	1
-../Core/Inc/i2c_register.hpp:94:11:I2C::VirtualRegister<short unsigned int>::~VirtualRegister()	1
-../Core/Inc/i2c_register.hpp:94:11:virtual I2C::VirtualRegister<short unsigned int>::~VirtualRegister()	1
-../Core/Inc/i2c_register.hpp:94:11:I2C::VirtualRegister<unsigned char>::~VirtualRegister()	1
-../Core/Inc/i2c_register.hpp:94:11:virtual I2C::VirtualRegister<unsigned char>::~VirtualRegister()	1
+../Core/Inc/i2c_register.hpp:121:11:I2C::VirtualRegister<float>::~VirtualRegister()	1
+../Core/Inc/i2c_register.hpp:121:11:virtual I2C::VirtualRegister<float>::~VirtualRegister()	1
+../Core/Inc/i2c_register.hpp:121:11:I2C::VirtualRegister<short unsigned int>::~VirtualRegister()	1
+../Core/Inc/i2c_register.hpp:121:11:virtual I2C::VirtualRegister<short unsigned int>::~VirtualRegister()	1
+../Core/Inc/i2c_register.hpp:121:11:I2C::VirtualRegister<long int>::~VirtualRegister()	1
+../Core/Inc/i2c_register.hpp:121:11:virtual I2C::VirtualRegister<long int>::~VirtualRegister()	1
+../Core/Inc/i2c_register.hpp:121:11:I2C::VirtualRegister<unsigned char>::~VirtualRegister()	1
+../Core/Inc/i2c_register.hpp:121:11:virtual I2C::VirtualRegister<unsigned char>::~VirtualRegister()	1
 ../Core/Inc/AS5600.hpp:20:7:AS5600::~AS5600()	1
 ../Core/Inc/MG996R.hpp:29:2:MG996R::MG996R()	1
 ../Core/Src/main.cpp:63:17:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*)	2
@@ -32,9 +42,14 @@
 ../Core/Src/main.cpp:104:5:int main()	2
 ../Core/Src/main.cpp:163:6:void SystemClock_Config()	4
 ../Core/Src/main.cpp:212:6:void Error_Handler()	1
-../Core/Inc/i2c_register.hpp:101:6:I2C::VirtualRegister<T>::VirtualRegister(uint8_t, I2C::RegisterMap&) [with T = float]	1
-../Core/Inc/i2c_register.hpp:101:6:I2C::VirtualRegister<T>::VirtualRegister(uint8_t, I2C::RegisterMap&) [with T = short unsigned int]	1
-../Core/Inc/i2c_register.hpp:101:6:I2C::VirtualRegister<T>::VirtualRegister(uint8_t, I2C::RegisterMap&) [with T = unsigned char]	1
+C:\ST\STM32CubeIDE_1.13.2\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344\tools\bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/include/c++/13.3.1/bits/std_function.h:239:5:constexpr std::_Function_base::_Function_base()	1
+C:\ST\STM32CubeIDE_1.13.2\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344\tools\bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/include/c++/13.3.1/bits/std_function.h:368:7:)>::function() [with _Res = void; _ArgTypes = {}]	1
+C:\ST\STM32CubeIDE_1.13.2\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344\tools\bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/include/c++/13.3.1/bits/std_function.h:573:16:)>::operator bool() const [with _Res = void; _ArgTypes = {}]	1
+C:\ST\STM32CubeIDE_1.13.2\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344\tools\bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/include/c++/13.3.1/bits/std_function.h:587:7:) const [with _Res = void; _ArgTypes = {}]	1
+../Core/Inc/i2c_register.hpp:129:6:I2C::VirtualRegister<T>::VirtualRegister(uint8_t, I2C::RegisterMap&, I2C::RegisterMode) [with T = float]	1
+../Core/Inc/i2c_register.hpp:129:6:I2C::VirtualRegister<T>::VirtualRegister(uint8_t, I2C::RegisterMap&, I2C::RegisterMode) [with T = short unsigned int]	1
+../Core/Inc/i2c_register.hpp:129:6:I2C::VirtualRegister<T>::VirtualRegister(uint8_t, I2C::RegisterMap&, I2C::RegisterMode) [with T = long int]	1
+../Core/Inc/i2c_register.hpp:129:6:I2C::VirtualRegister<T>::VirtualRegister(uint8_t, I2C::RegisterMap&, I2C::RegisterMode) [with T = unsigned char]	1
 ../Core/Src/main.cpp:221:1:void __static_initialization_and_destruction_0()	1
 ../Core/Inc/MG996R.hpp:23:7:MG996R::~MG996R()	1
 ../Core/Src/main.cpp:221:1:void __static_initialization_and_destruction_1()	1

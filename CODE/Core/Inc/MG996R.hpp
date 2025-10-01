@@ -40,17 +40,14 @@ public:
 		);
 
 
+	// --- Callbacks
+
+	void bindCallbacks();
+
 	// --- Control Loop
 
 	void controlLoop();
 
-
-	// --- Callbacks
-
-	inline void desiredPosition(uint16_t position) { regActualPosition.typedSet(position); }
-	inline uint16_t desiredPosition(void) { return regDesiredPosition.typedGet(); }
-
-	inline uint16_t currentPosition() { return regActualPosition.typedGet(); }
 
 
 	// Slave Manager
@@ -81,16 +78,18 @@ private:
 	I2C::VirtualRegister<float> regProportionalGain{RegAddr::ProportionalGain, _registerMap};
 	I2C::VirtualRegister<float> regIntegralGain{RegAddr::IntegralGain, _registerMap};
 	I2C::VirtualRegister<float> regDerivativeGain{RegAddr::DerivativeGain, _registerMap};
+	I2C::VirtualRegister<float> regAntiwindupMax{RegAddr::AntiwindupMax, _registerMap};
+	I2C::VirtualRegister<float> regAntiwindupMin{RegAddr::AntiwindupMin, _registerMap};
 	I2C::VirtualRegister<float> regOutputMax{RegAddr::OutputMax, _registerMap};
-	I2C::VirtualRegister<float> regOutputLow{RegAddr::OutputMin, _registerMap};
+	I2C::VirtualRegister<float> regOutputMin{RegAddr::OutputMin, _registerMap};
 
 	// Servo State
 	I2C::VirtualRegister<uint16_t> regDesiredPosition{RegAddr::DesiredPosition, _registerMap};
-	I2C::VirtualRegister<uint16_t> regActualPosition{RegAddr::ActualPosition, _registerMap};
-	I2C::VirtualRegister<uint16_t> regMotorCurrent{RegAddr::MotorCurrent, _registerMap};
-	I2C::VirtualRegister<uint16_t> regMotorVoltage{RegAddr::MotorVoltage, _registerMap};
-	I2C::VirtualRegister<uint16_t> regMotorPower{RegAddr::MotorPower, _registerMap};
-	I2C::VirtualRegister<uint16_t> regDutyCycle{RegAddr::DutyCycle, _registerMap};
+	I2C::VirtualRegister<int32_t> regActualPosition{RegAddr::ActualPosition, _registerMap, I2C::RegisterMode::ReadOnly};
+	I2C::VirtualRegister<uint16_t> regMotorCurrent{RegAddr::MotorCurrent, _registerMap, I2C::RegisterMode::ReadOnly};
+	I2C::VirtualRegister<uint16_t> regMotorVoltage{RegAddr::MotorVoltage, _registerMap, I2C::RegisterMode::ReadOnly};
+	I2C::VirtualRegister<uint16_t> regMotorPower{RegAddr::MotorPower, _registerMap, I2C::RegisterMode::ReadOnly};
+	I2C::VirtualRegister<int32_t> regDutyCycle{RegAddr::DutyCycle, _registerMap};
 
 	// Sensors Configuration
 	I2C::VirtualRegister<uint16_t> regZeroPosition{RegAddr::ZeroPosition, _registerMap};
@@ -108,7 +107,9 @@ private:
 		DefaultSettings::I2C_MaxDelay
 	};
 
-	SWPIDController _controller{
+	AngleUnwrapper _unwrapper;
+
+	SWPID _controller{
 		DefaultSettings::TimeStep,
 		DefaultSettings::ProportionalGain,
 		DefaultSettings::IntegralGain,

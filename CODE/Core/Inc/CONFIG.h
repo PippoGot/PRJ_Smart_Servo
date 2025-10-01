@@ -20,8 +20,10 @@ namespace RegAddr {
 	constexpr uint8_t ProportionalGain 		= 0x00;
 	constexpr uint8_t IntegralGain 			= 0x01;
 	constexpr uint8_t DerivativeGain 		= 0x02;
-	constexpr uint8_t OutputMax 			= 0x03;
-	constexpr uint8_t OutputMin 			= 0x04;
+	constexpr uint8_t AntiwindupMax 		= 0x03;
+	constexpr uint8_t AntiwindupMin			= 0x04;
+	constexpr uint8_t OutputMax 			= 0x05;
+	constexpr uint8_t OutputMin 			= 0x06;
 
 	// Servo Motor State
 	constexpr uint8_t DesiredPosition 		= 0x20;
@@ -49,6 +51,8 @@ namespace DefaultSettings {
 	constexpr float ProportionalGain 		= 10.0f;
 	constexpr float IntegralGain 			= 0.9f;
 	constexpr float DerivativeGain 			= 0.1f;
+	constexpr float AntiwindupMax			= 5.0f;
+	constexpr float AntiwindupMin			= -5.0f;
 	constexpr float OutputMax 				= 1.0f;
 	constexpr float OutputMin 				= -1.0f;
 
@@ -68,6 +72,9 @@ namespace DefaultSettings {
 	// INA219 Current Sensor
 	constexpr uint8_t INA219_Address 		= 0x40;
 	constexpr uint16_t INA219_Calibration 	= 0x0000;
+
+	// Slave Configuration
+	constexpr uint8_t SlaveAddress			= 0x51;
 }
 
 
