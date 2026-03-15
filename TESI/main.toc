@@ -1,0 +1,79 @@
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{Abstract}{III}{chapter*.2}%
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\contentsline {subsubsection}{Motivation and Problem Statement}{1}{subsubsection*.3}%
+\contentsline {subsubsection}{Thesis Objectives}{1}{subsubsection*.4}%
+\contentsline {subsubsection}{Thesis Structure}{2}{subsubsection*.5}%
+\contentsline {chapter}{\numberline {2}Model Design and Simulation}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Structural Design}{3}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Limb Parametrization and Forward Kinematics}{4}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Inverse Kinematics Overview and Derivation}{7}{subsection.2.1.2}%
+\contentsline {subsubsection}{Joint Angle $q_1$ (Yaw)}{8}{subsubsection*.11}%
+\contentsline {subsubsection}{Joint Angles $q_2$ and $q_3$ (Pitch)}{8}{subsubsection*.12}%
+\contentsline {section}{\numberline {2.2}Reachable Workspace and Path Planning}{10}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Workspace Definition and Analysis}{10}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Trajectory Design}{12}{subsection.2.2.2}%
+\contentsline {subsubsection}{Quintic Polynomials}{12}{subsubsection*.14}%
+\contentsline {subsubsection}{Horizontal Component}{13}{subsubsection*.15}%
+\contentsline {subsubsection}{Vertical Component}{14}{subsubsection*.16}%
+\contentsline {subsubsection}{Path Assembly}{15}{subsubsection*.17}%
+\contentsline {subsubsection}{Walking Speed Dependance}{15}{subsubsection*.18}%
+\contentsline {section}{\numberline {2.3}Control and Simulation}{16}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Open Loop Control Strategy}{16}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Digital Simulation}{17}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Simulation Results}{19}{subsection.2.3.3}%
+\contentsline {subsubsection}{Cartesian Space Analysis}{19}{subsubsection*.23}%
+\contentsline {subsubsection}{Joint Space Analysis}{21}{subsubsection*.25}%
+\contentsline {section}{\numberline {2.4}Proprioception and Path Adaptation}{21}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Contact Sensing and Architectural Shift}{21}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Finite State Trajectory Generator}{23}{subsection.2.4.2}%
+\contentsline {subsubsection}{State 1: Posterior Stance (Stance 1)}{23}{subsubsection*.28}%
+\contentsline {subsubsection}{State 2: Lift Phase (Early Swing)}{24}{subsubsection*.29}%
+\contentsline {subsubsection}{State 3: Touch Phase (Late Swing)}{24}{subsubsection*.30}%
+\contentsline {subsubsection}{State 4: Anterior Stance (Stance 2)}{25}{subsubsection*.31}%
+\contentsline {subsection}{\numberline {2.4.3}Adaptive Simulation Results}{25}{subsection.2.4.3}%
+\contentsline {subsubsection}{Vertical Adaptation}{26}{subsubsection*.32}%
+\contentsline {subsubsection}{Synchronization and Phase Correction}{27}{subsubsection*.34}%
+\contentsline {subsubsection}{Continuity and Stability Considerations}{27}{subsubsection*.35}%
+\contentsline {chapter}{\numberline {3}Custom Smart Actuator Module Design}{29}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Limitations of Commercial Servos}{29}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Hardware Design and Component Selection}{31}{section.3.2}%
+\contentsline {subsubsection}{Position Feedback: Magnetic Encoder (AS5600)}{32}{subsubsection*.37}%
+\contentsline {subsubsection}{Power Stage: H-Bridge Driver (DRV8870)}{32}{subsubsection*.38}%
+\contentsline {subsubsection}{Control Logic: Microcontroller (STM32F103C8T6)}{32}{subsubsection*.39}%
+\contentsline {subsection}{\numberline {3.2.1}PCB Design and Layout}{33}{subsection.3.2.1}%
+\contentsline {section}{\numberline {3.3}Embedded Software Architecture}{35}{section.3.3}%
+\contentsline {subsubsection}{Layer 1: Vendor HAL}{35}{subsubsection*.42}%
+\contentsline {subsubsection}{Layer 2: Custom Middleware and Communication}{35}{subsubsection*.43}%
+\contentsline {subsubsection}{Layer 3: High-Level Component Drivers}{35}{subsubsection*.44}%
+\contentsline {subsubsection}{Layer 4: Application Layer}{36}{subsubsection*.45}%
+\contentsline {subsection}{\numberline {3.3.1}Control Strategy}{36}{subsection.3.3.1}%
+\contentsline {subsubsection}{Algorithm Description}{37}{subsubsection*.46}%
+\contentsline {section}{\numberline {3.4}Module Characterization and Benchmarking}{38}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Static Analysis: Linearity and Hysteresis}{38}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Step Response Analysis: Sensitivity and Settling}{39}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Results Summary}{42}{subsection.3.4.3}%
+\contentsline {chapter}{\numberline {4}Prototype Implementation}{45}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Hardware-in-the-Loop Architecture}{45}{section.4.1}%
+\contentsline {subsubsection}{Physical Assembly}{45}{subsubsection*.51}%
+\contentsline {subsubsection}{Simulink/Arduino Control Environment}{47}{subsubsection*.53}%
+\contentsline {subsubsection}{Experimental Protocol}{47}{subsubsection*.55}%
+\contentsline {section}{\numberline {4.2}Performance Assessment and Results}{48}{section.4.2}%
+\contentsline {subsubsection}{Cartesian Trajectory Tracking}{48}{subsubsection*.56}%
+\contentsline {subsubsection}{Joint Space Performance}{49}{subsubsection*.60}%
+\contentsline {subsubsection}{Delay and Response Analysis}{52}{subsubsection*.62}%
+\contentsline {subsubsection}{Quantitative Benchmark}{53}{subsubsection*.64}%
+\contentsline {chapter}{\numberline {5}Conclusions}{55}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Achievements and Considerations}{55}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Economical and Practical Aspects}{56}{section.5.2}%
+\contentsline {section}{\numberline {5.3}General Applicability and Future Work}{56}{section.5.3}%
+\contentsline {chapter}{Declaration on the Use of Generative AI}{59}{chapter*.66}%
+\contentsline {chapter}{Ringraziamenti}{61}{chapter*.67}%
+\contentsline {chapter}{\numberline {A}Appendix}{63}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Full Inverse Kinematics Expressions}{64}{section.A.1}%
+\contentsline {section}{\numberline {A.2}Servo Module Schematic}{65}{section.A.2}%
+\contentsline {section}{\numberline {A.3}Software Architecture}{66}{section.A.3}%
+\contentsline {section}{\numberline {A.4}Register Map}{67}{section.A.4}%
+\contentsline {section}{\numberline {A.5}Metrics Formulae}{68}{section.A.5}%
+\contentsline {section}{\numberline {A.6}Bill of Material}{69}{section.A.6}%
+\contentsline {chapter}{References}{71}{appendix*.71}%

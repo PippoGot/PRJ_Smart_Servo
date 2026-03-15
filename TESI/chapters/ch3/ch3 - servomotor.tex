@@ -1,0 +1,19 @@
+\chapter{Custom Smart Actuator Module Design}
+\label{ch:servomotor}
+
+The performance of any articulated robotic system is strictly bound by the capabilities of its actuators.
+In the context of the hexapod limb designed in Chapter \ref{ch:model}, the requirements for
+trajectory tracking accuracy, and smoothness of motion are strict. While the geometric design dictates
+the reachable workspace, the actuator dynamic dictates the quality of movement within that space.
+
+To satisfy these requirements without incurring in the prohibitive costs of industrial-grade servomotors
+(e.g. Dynamixel-X series \cite{robotis_dynamixel_x}), a custom actuator module was developed, aiming for a good
+compromise between performance and cost. This section details the transition from analyzing the limitations of
+standard low-cost components to the engineering of a high-performance, "smart" joint module.
+
+\input{chapters/ch3/sc3.1 - limitations.tex}
+\input{chapters/ch3/sc3.2 - hardware.tex}
+\input{chapters/ch3/sc3.3 - software.tex}
+\input{chapters/ch3/sc3.4 - results.tex}
+
+

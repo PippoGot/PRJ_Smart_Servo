@@ -1,0 +1,167 @@
+% le caratteristiche richieste dall'università sono elencate qui: https://stem.elearning.unipd.it/mod/book/view.php?id=234&chapterid=46#modalita
+% 12pt: font richiesto dall'università
+% twoside: i margini interni ed esterni sono scambiati per le pagine "a sinistra" e "a destra"
+% openright: i capitoli cominciano in pagine dispari ("a destra")
+% extreport: supporta 12pt
+\documentclass[12pt, a4paper, twoside, openright]{extreport}
+
+% --- PACCHETTI ---
+
+% margini
+\usepackage{geometry}
+\geometry{a4paper, top = 2cm, bottom = 2cm, outer = 2cm, inner = 3cm, includeheadfoot}
+
+% unità di misura e matematica
+\usepackage{siunitx, amsmath}
+%\everydisplay{\footnotesize}
+\everymath{\displaystyle}
+
+% numerazione capitoli e formato titolo
+\usepackage[english]{babel}
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]                % titolo + numero sulla stessa linea
+    {\normalfont\huge\bfseries}             % stile del titolo
+    {\thechapter.}                          % numero del capitolo
+    {1em}                                   % spazio tra numero e titolo
+    {}                                      % codice prima del testo
+\titlespacing*{\chapter}{0pt}{-10pt}{20pt}  % margini e spazi verticali
+
+
+
+% didascalie
+\usepackage{subcaption, caption}
+
+% impaginazione
+\usepackage{setspace}
+\onehalfspacing
+\setlength{\parindent}{0pt} % niente rientro nei paragrafi
+\setlength{\parskip}{0.7em} % spazio tra paragrafi
+
+\usepackage{enumitem}
+\setlist{itemsep = 0.25em, topsep = 0.25em} % spazio tra elementi di una lista
+
+\usepackage{tocloft} % 1. Carica il pacchetto
+\setlength{\cftbeforechapskip}{20pt}
+
+% font
+\usepackage{times}
+
+% colori, grafiche e tabelle
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{booktabs}   % Per linee orizzontali professionali
+\usepackage{longtable}  % Per tabelle che possono andare su più pagine
+\renewcommand{\arraystretch}{1.3} % Aumenta leggermente lo spazio tra le righe
+\usepackage[dvipsnames]{xcolor} % Per colori avanzati (opzionale, ma utile)
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows.meta, bending}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{calc} % Serve per calcolare la larghezza della colorbox
+
+% import/export formato pdf
+\usepackage{pdfpages}
+\usepackage[a-1a]{pdfx}
+\hypersetup{hidelinks} % nascondi rettangoli di href
+
+% bibliografia e appendice
+\usepackage{csquotes, url}
+\usepackage[backend = biber, style = ieee]{biblatex}
+\addbibresource{bibliography.bib}
+\usepackage[toc,page]{appendix}
+
+
+% macro personalizzate
+
+% --- PACCHETTI PER AMBIENTE TODO ---
+\usepackage[breakable]{tcolorbox}
+
+% --- DEFINIZIONE AMBIENTE TODO ---
+% Crea un nuovo ambiente tcolorbox chiamato 'todo'
+\newtcolorbox{todo}{
+    colback   = red!5!white,  % Colore di sfondo (rosa = rosso 5% + bianco 95%)
+    colframe  = red!75!black, % Colore del bordo (rosso scuro)
+    fonttitle = \bfseries,    % Titolo in grassetto
+    title     = {TODO:},      % Titolo automatico
+    breakable = true,         % Permette al box di spezzarsi tra le pagine
+    arc       = 2mm,          % Angoli leggermente arrotondati
+    boxrule   = 0.5mm,        % Spessore del bordo
+}
+
+% --- MACRO PER SEGNAPOSTO IMMAGINE ---
+% Crea un box segnaposto per una figura
+% Argomenti:
+% #1: label (per \ref)
+% #2: didascalia (per \caption)
+% #3: Testo principale (grassetto)
+% #4: Descrizione (corsivo)
+\newcommand{\segnaposto}[4]{%
+    \begin{figure}[htbp]
+    \centering
+    \framebox{\parbox{0.6\textwidth}{\centering
+        \vspace{3cm} % Spazio sopra
+        \textbf{#3} \\
+        \small\textit{#4}
+        \vspace{3cm} % Spazio sotto
+    }}
+    \caption{#2}
+    \label{#1}
+    \end{figure}
+}
+
+% --- DEFINIZIONE MACRO PER I BLOCCHI COLORATI ---
+% Sintassi: \ColorBlock{ColoreSfondo}{Contenuto}
+\newcommand{\ColorBlock}[2]{%
+    \State \makebox[\linewidth][l]{%
+        \colorbox{#1!15}{% !15 rende il colore molto tenue (pastello)
+            \parbox{\dimexpr\linewidth-2\fboxsep}{#2}%
+        }%
+    }%
+}
+
+% --- DOCUMENTO PRINCIPALE ---
+
+% --- FRONTESPIZIO ---
+\title{Hardware/Software Design and Implementation\\of an Open Robotic Chain\\Using Custom Servo-Motor Modules}
+\author{Gottardo Filippo}
+\date{04/12/2025}
+\newcommand{\supervisor}{Prof. Cenedese Angelo}
+\newcommand{\cosupervisor}{Ing. Antonello Riccardo}
+
+% inizio del documento
+\begin{document}
+    \pagenumbering{Roman}
+    \pagestyle{empty}
+    \input{chapters/ch0/frontespizio.tex}
+    \pagestyle{plain}
+    \cleardoublepage
+
+    % --- ABSTRACT ---
+    \input{chapters/ch0/abstract.tex}
+
+    % --- INDICE ---
+    \cleardoublepage
+    \tableofcontents
+    \cleardoublepage
+    \pagenumbering{arabic}
+    %\input{chapters/content mockup.tex}     % mockup del contenuto
+
+    % --- CAPITOLI ---
+    \input{chapters/ch1/ch1 - intro.tex}
+    \input{chapters/ch2/ch2 - model.tex}
+    \input{chapters/ch3/ch3 - servomotor.tex}
+    \input{chapters/ch4/ch4 - prototype.tex}
+    \input{chapters/ch5/ch5 - conclusions.tex}
+    \input{chapters/ch5/ch6 - acknowledgements.tex}
+    \cleardoublepage
+
+    % --- APPENDICI ---
+    \appendix
+    \include{chapters/appendices/appendix.tex}
+
+    % --- BIBLIOGRAFIA ---
+    \printbibliography[heading = bibintoc, title = {References}]
+
+\end{document}

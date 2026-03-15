@@ -1,0 +1,173 @@
+\section{Embedded Software Architecture}
+
+The firmware running on the STM32 microcontroller was developed using a modular, object-oriented approach in
+C++. This architecture ensures code reusability, encapsulation of hardware specifics, and ease of maintenance
+and scalability. The software stack (Appendix \ref{app:software}) is organized into four distinct abstraction
+layers, moving from low-level hardware management to high-level application logic.
+
+
+\subsubsection{Layer 1: Vendor HAL}
+
+The foundational layer consists of the Hardware Abstraction Layer (HAL) provided by the microcontroller
+manufacturer. Modules such as \texttt{i2c.h} and \texttt{tim.h} handle the direct register-level configuration
+of the MCU peripherals. Relying on these standard verified drivers ensures robust handling of interrupts and
+basic I/O operations.
+
+
+\subsubsection{Layer 2: Custom Middleware and Communication}
+
+This layer acts as a bridge between the raw hardware and the high-level logic, abstracting the communication
+protocols. Key modules include:
+
+\begin{itemize}
+    \item \textbf{I2C Device Wrappers:} Classes like \texttt{i2c\_device} and \texttt{i2c\_slave} extend the
+        Vendor HAL to provide simplified interfaces for bus communication, handling read/write buffers and
+        addressing logic.
+    \item \textbf{Virtual Register:} This is the core component of the communication architecture. It
+        implements the "Virtual Register Map" concept, abstracting the internal state of the actuator
+        (positions, gains, modes) as a set of memory-mapped values. This allows the external master to
+        interact with the servo seamlessly, as if reading from a standard memory device, changing its
+        behaviour dynamically as needed.
+\end{itemize}
+
+
+\subsubsection{Layer 3: High-Level Component Drivers}
+
+This layer contains the specific drivers for the chosen hardware components and the pure algorithmic logic,
+independent of the specific MCU.
+
+\begin{itemize}
+    \item \textbf{Component Drivers:} The \texttt{AS5600} and \texttt{DRV8870} classes encapsulate the
+        specific operational details of the sensor and driver. They utilize the lower layers to perform tasks
+        such as reading raw magnetic angles or setting PWM duty cycles, exposing clean methods (e.g.
+        \texttt{getAngle()}, \texttt{setSpeed()}) to the application layer.
+    \item \textbf{Math and Control:} This module contains the implementation of the control algorithms,
+        including the Switching PID logic. It is designed to be purely mathematical, accepting error inputs
+        and producing control outputs without direct dependencies on hardware headers.
+\end{itemize}
+
+
+\subsubsection{Layer 4: Application Layer}
+
+The highest level of the hierarchy integrates all previous modules to define the actuator's behavior.
+
+\begin{itemize}
+    \item \textbf{Smart Servo Class:} This main class encapsulates the entire logic of the actuator. It
+        instantiates the drivers and control modules, managing the data flow between the sensor readings,
+        the PID computation, and the motor output.
+    \item \textbf{Entry Point:} The \texttt{main.cpp} and \texttt{CONFIG.h} files handle the system
+        initialization, configuration, and the execution of the main real-time control loop.
+\end{itemize}
+
+
+\subsection{Control Strategy}
+
+Achieving high-precision positioning in robotic joints is inherently challenging due to the presence of
+nonlinear friction phenomena \cite{armstrong1994survey}, specifically static friction (Coulomb) and velocity
+weakening effects (Stribeck). As extensively discussed in control literature, standard linear controllers like
+the classical PID struggle to manage these non-linearities effectively.
+
+In particular, the integral action required to overcome static friction often leads to overshoot. When
+combined with the Stribeck effect, this energy imbalance prevents convergence to the setpoint, resulting in
+persistent oscillations known as the "hunting phenomenon". While model-based control techniques could
+theoretically compensate for these effects, they require precise parameter identification — which is difficult
+to maintain over time due to wear and load changes — and impose a computational burden often incompatible with
+low-cost embedded hardware.
+
+A robust alternative that seems to mitigate these issues without requiring complex friction models is the
+class of hybrid control strategies, such as Reset or Switching PID \cite{bisoffi2020stick, lorigiola2025switching}.
+These approaches modify the internal state of the controller (specifically the integrator) based on discrete
+logical rules triggered by the system's state (e.g. zero-crossing of the error or velocity).
+
+The control strategy implemented in this custom actuator is directly derived from the Switching PID strategy
+proposed and analyzed in \cite{lorigiola2025switching}. This approach uses a state-machine logic to
+dynamically switch the integrator behavior and avoid hunting.
+
+Since the rigorous mathematical derivation and stability proofs of this control strategy are extensive and already
+well-documented in the referenced literature, they are considered outside the scope of this thesis. Instead,
+this section provides a functional description of the algorithm and the pseudocode implementation specifically
+tailored for the custom hardware application.
+
+
+\subsubsection{Algorithm Description}
+
+\begin{algorithm}[H]
+    \footnotesize
+    \caption{Switching PID for Friction Compensation}
+    \label{alg:switching_pid}
+    \begin{algorithmic}[1]
+        \Require Reference $r_k$, Measurement $y_k$, Gains $K_p, K_i, K_d$
+        \Ensure Control Input $u_k \in [-1, 1]$
+
+        \State $e_k \gets r_k - y_k$ \Comment{Position Error}
+        \State $v_k \gets \frac{y_k - y_{k-1}}{\Delta t}$ \Comment{Estimated Velocity}
+
+        \vspace{0.1cm}
+
+        % --- BLOCCO 1: PI Computation (Blu) ---
+        \ColorBlock{RoyalBlue}{
+            \textbf{1. PI Computation \& Anti-Windup} \\
+            $\sigma \gets K_i \cdot e_k$ \\
+            $\phi' \gets K_p \cdot (e_k + I_{state})$ \\
+            $\phi \gets \text{Saturation of }\phi'$ \\
+            $\Delta_{sat} \gets \phi' - \phi$ \\
+            \textbf{if} $\text{sgn}(\sigma) == \text{sgn}(\Delta_{sat})$ \textbf{and} $\Delta_{sat} \ne 0$ \textbf{then} \\
+            \hspace*{1.5em} $I_{state} \gets I_{state}$ \Comment{Hold integrator} \\
+            \textbf{else} \\
+            \hspace*{1.5em} $I_{state} \gets I_{state} + \sigma \Delta t$ \Comment{Update integrator} \\
+            \textbf{end if}
+        }
+
+        \vspace{0.1cm}
+
+        % --- BLOCCO 2: Switching Logic (Arancione) ---
+        \ColorBlock{OrangeRed}{
+            \textbf{2. Switching Logic} \\
+            \textbf{if} $(\text{State} == \textsc{StickSlip}) \textbf{ and } (\sigma \cdot \phi \le 0)$ \textbf{then} \\
+            \hspace*{1.5em} $\phi \gets -\phi$ \Comment{Reset energy} \\
+            \hspace*{1.5em} $I_{state} \gets \frac{\phi}{K_p} - e_k$ \\
+            \hspace*{1.5em} $\text{State} \gets \textsc{Overshoot}$ \\
+            \textbf{else if} $(\text{State} == \textsc{Overshoot}) \textbf{ and } (v_k \cdot \phi \ge 0)$ \textbf{then} \\
+            \hspace*{1.5em} $\phi \gets K_p \cdot \sigma / K_i$ \Comment{Restore linear behavior} \\
+            \hspace*{1.5em} $I_{state} \gets 0$ \\
+            \hspace*{1.5em} $\text{State} \gets \textsc{StickSlip}$ \\
+            \textbf{end if}
+        }
+
+        \vspace{0.1cm}
+
+        % --- BLOCCO 3: Output (Verde) ---
+        \ColorBlock{ForestGreen}{
+            \textbf{3. Output Calculation} \\
+            $u_k \gets \text{Clamp}(\phi - K_d \cdot v_k, -1, 1)$
+        }
+
+        \vspace{0.1cm}
+
+        \State \Return $u_k$
+    \end{algorithmic}
+\end{algorithm}
+
+The control loop runs at a fixed frequency of $1\,\text{kHz}$. At each time step $k$, the algorithm described
+in Algorithm \ref{alg:switching_pid} is executed.
+
+The controller operates in two distinct logical states: when in \textbf{Stick-Slip State} (default) the
+integrator is fully active to build up the torque necessary to overcome static friction ($F_s$). The logic
+prioritizes "breaking out" of the stick phase. Detecting that the error has crossed zero (overshoot) triggers
+the transition to the \textbf{Overshoot State}. In this mode, the logic serves to dampen the response by
+inverting the control action, preventing the limit cycles (hunting) typical of high-gain PIDs on frictional loads.
+
+The transition between these states is governed by the relationship between the generalized position error
+($\sigma$) and the total proportional-integral control effort ($\phi$).
+
+Notably, the term $\phi$ acts as a 'virtual' control effort that is reset discontinuously during state
+transitions (Block 2), allowing the controller to instantly adapt its energy based on the
+friction regime, a capability not present in standard linear PIDs.
+
+This control strategy is originally derived for set-point regulation (point-to-point motion). While effective for
+the quasi-static segments of the gait cycle, its application to dynamic trajectory tracking may require further
+tuning or structural modifications (e.g. feed-forward terms). Addressing these specific dynamic tracking
+optimization is considered outside the scope of this thesis and is left for future work.
+
+
+

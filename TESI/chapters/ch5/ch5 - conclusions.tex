@@ -1,0 +1,76 @@
+\chapter{Conclusions}
+\label{ch:conclusions}
+
+This thesis has documented the complete engineering cycle of a modular robotic limb, moving from the theoretical
+kinematic analysis to the physical realization of a high-performance, cost-effective actuation system. The central
+challenge addressed in this work was the "actuation bottleneck" typical of low-cost robotics, where the mechanical
+and control performance is severely limited by the poor quality of commercial hobbyist servo-motors. By adopting a
+top-down design methodology, supported by simulation and component-level redesign, this research successfully
+demonstrated that high-fidelity control can be achieved without resorting to prohibitively expensive industrial
+hardware.
+
+
+\section{Achievements and Considerations}
+
+The primary technical achievement of this work is the development and validation of the custom "Smart Actuator" module.
+The transition from a standard analog architecture to a fully digital, microcontroller-based system yielded quantifiable
+improvements in every key performance metric.
+
+As demonstrated by the experimental benchmarking in Chapter \ref{ch:servomotor}, the custom module reduced the Root
+Mean Square Error (RMSE) in position tracking from an average of $\approx 14^{\circ}$ (observed in the original MG996R
+units) to just $0.37^{\circ}$. This result confirms that the limitations of low-cost robotics are often not mechanical
+but electronic and algorithmic. Specifically:
+
+\begin{itemize}
+    \item \textbf{Linearity and Precision:} The integration of the AS5600 magnetic encoder eliminated the
+        non-linearities and wear associated with resistive potentiometers, providing a stable 12-bit feedback
+        signal.
+    \item \textbf{Friction Compensation:} The implementation of the Switching PID control strategy proved effective in
+        mitigating the stick-slip phenomenon. The ability to dynamically switch integrator states allowed the actuator
+        to overcome static friction without inducing the limit-cycle oscillations (hunting) typical of standard linear
+        controllers.
+    \item \textbf{Sim-to-Real Fidelity:} The Hardware-in-the-Loop validation detailed in Chapter \ref{ch:prototype}
+        confirmed a high degree of correlation between the Simulink numerical model and the physical prototype.
+\end{itemize}
+
+
+\section{Economical and Practical Aspects}
+
+From an economical perspective, the custom module represents a strategic compromise between cost and performance.
+Industrial actuators capable of similar precision typically cost between 10 to 20 times more than a standard hobby
+servo. The prototype developed in this thesis achieves comparable tracking fidelity at a fraction of that cost,
+maintaining a bill of materials (BOM, Appendix \ref{app:bom}) compatible with academic and hobbyist budgets.
+
+A crucial practical advantage of this design is its retro-compatibility. By strictly adhering to the external
+form factor of the standard "40x20x36mm" servo case, the custom module acts as a "drop-in replacement". This allows for
+the immediate upgrade of existing hexapod platforms without requiring any mechanical redesign or the re-printing of
+structural parts. Furthermore, the shift to an $I^2C$ bus architecture simplifies the robot's wiring harness, allowing
+multiple actuators to be daisy-chained on a single cable, thereby reducing the complexity and weight of the central
+electronics.
+
+
+\section{General Applicability and Future Work}
+
+While this research focused on a hexapod limb, the developed "Smart Actuator" has general applicability across the field
+of robotics. It can be effectively employed in low-cost robotic arms, camera gimbals, or bipedal systems where precision
+and customizability are required but budget is constrained.
+
+However, several areas remain open for future development to transition from this single-leg prototype to a fully
+autonomous hexapod robot:
+
+\begin{itemize}
+    \item \textbf{Proprioceptive Validation:} The adaptive "Blind Walking" strategy and the Finite State Machine
+        trajectory generator were validated only in the simulation environment (Chapter \ref{ch:model}). Future work
+        must focus on enabling the impact detection logic on the physical hardware, utilizing the motor current feedback
+        or external contact sensors to handle uneven terrain.
+    \item \textbf{Dynamic Tuning Optimization:} The PID gains used in the experimental validation were tuned empirically.
+        Implementing an auto-tuning routine or a model-based parameter identification algorithm would further optimize
+        the controller's response to varying loads.
+    \item \textbf{Full-Body Integration:} The final step is the replication of the limb design to assemble the complete
+        hexapod. This will introduce new challenges regarding power management, inter-leg coordination, and the global
+        stability of the chassis, which were outside the scope of this single-leg study.
+\end{itemize}
+
+In conclusion, this thesis lays a solid foundation for the development of accessible, high-performance legged robots,
+proving that intelligent control design can effectively bridge the gap between low-cost hardware and advanced robotic
+capabilities.

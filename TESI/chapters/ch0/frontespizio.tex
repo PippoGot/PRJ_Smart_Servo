@@ -1,0 +1,47 @@
+\begin{titlepage}
+    % solo il frontespizio deve essere simmetrico rispetto ai margini interno ed esterno
+    \newgeometry{hmargin=2.5cm,vmargin=2cm}
+        \begin{figure}
+            \centering
+            \begin{subfigure}[b]{0.4\textwidth}
+                \includegraphics[width=\textwidth]{images/logo_unipd}
+            \end{subfigure}
+            \hfill
+            \begin{subfigure}[b]{0.3\textwidth}
+                \includegraphics[width=\textwidth]{images/logo_dei}
+            \end{subfigure}
+        \end{figure}
+
+        \vspace*{\stretch{0.5}}
+
+        \begin{center}
+            \makeatletter % serve per poter usare \@...
+
+            % NOTA: il Times New Roman non supporta il maiuscoletto.
+            \textsc{DEPARTMENT OF INFORMATION ENGINEERING}\\
+            \vspace*{\stretch{0.1}}
+            \textsc{MASTER DEGREE IN CONTROL SYSTEMS ENGINEERING}
+
+            \vspace*{\stretch{0.5}}
+            \LARGE
+            \textbf{\@title}
+
+            \vspace*{\stretch{1}}
+            \normalsize
+            \begin{tabular*}{\textwidth}{l @{\extracolsep{\fill}} r}
+                \textbf{Supervisor} & \textbf{Candidate} \\
+                \supervisor       & \@author           \\
+                \\
+                \textbf{Co-Supervisor} \\
+                \cosupervisor \\
+            \end{tabular*}
+
+            \vspace*{\stretch{2}}
+            \textsc{ACADEMIC YEAR 2024-2025} \\
+            \vspace*{\stretch{0.1}}
+            Graduation Date \@date
+
+            \makeatother % serve dopo \makeatletter
+        \end{center}
+    \restoregeometry
+\end{titlepage}

@@ -1,0 +1,20 @@
+\chapter{Prototype Implementation}
+\label{ch:prototype}
+
+Following the successful design and characterization of the custom actuator module, the research progresses
+to the system-level integration. This chapter details the physical assembly of the modular robotic limb and
+the establishment of the control infrastructure required to bridge the simulation environment with the real
+world.
+
+The primary objective of this phase is to validate the mechanical design and the kinematic control strategies
+derived in Chapter \ref{ch:model} under real-world conditions. The validation relies on a
+Hardware-in-the-Loop (HIL) architecture, which allows for direct comparison between the theoretical model
+and the physical prototype.
+
+The scope of these experiments is strictly limited to the verification of the kinematic model and trajectory tracking
+capabilities in an open-loop configuration. The proprioceptive and adaptive control strategies discussed in Section
+\ref{sec:proprioception}, while validated in simulation, are excluded from this experimental verification due to
+project time constraints.
+
+\input{chapters/ch4/sc4.1 - assembly.tex}
+\input{chapters/ch4/sc4.2 - performance.tex}

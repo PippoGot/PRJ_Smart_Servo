@@ -1,0 +1,55 @@
+\chapter{Introduction}
+
+The field of bio-inspired robotics \cite{delcomyn2004insect} has seen rapid advancements in recent years,
+\cite{chai2022survey,fan2024review} driven by the need for autonomous systems capable of navigating
+unstructured and complex environments. Among these, hexapod robots offer a unique combination of stability,
+payload capacity, and terrain adaptability that wheeled platforms cannot match. However, the effective deployment
+of such legged systems is fundamentally dictated by the quality of their actuation.
+
+
+\subsubsection{Motivation and Problem Statement}
+
+Precise legged locomotion requires accurate control of joint angles and torque. While industrial-grade actuators
+(e.g. Dynamixel-X series \cite{robotis_dynamixel_x}) offer the necessary fidelity and communication interfaces,
+their prohibitive cost makes them inaccessible for many research and prototyping applications. Conversely,
+low-cost "hobby" servo-motors, while affordable, present critical limitations. They typically operate as
+"black boxes" with inaccessible internal control loops, rely on wear-prone resistive potentiometers for feedback,
+and suffer from significant deadbands and non-linear friction effects.
+
+
+\subsubsection{Thesis Objectives}
+
+This thesis addresses these challenges by proposing a comprehensive hardware-software design. The overarching goal
+is to bridge the gap between low-cost hardware and high-performance control. The specific objectives are:
+
+\begin{enumerate}
+    \item \textbf{Kinematic Framework:} To derive and validate the mathematical model of a 3-DOF hexapod limb,
+        ensuring reliable workspace analysis and trajectory planning.
+    \item \textbf{Actuator Redesign:} To engineer a custom "Smart Actuator" module that retains the standard form factor
+        of commercial servos but upgrades performances through internal electronics replacements.
+    \item \textbf{Sim-to-Real Validation:} To establish a Hardware-in-the-Loop (HIL) architecture that allows for direct
+        performance comparison between a theoretical numerical model and the physical prototype.
+    \item \textbf{Modular Scalability:} To adopt a strictly modular design philosophy for both hardware and software
+        architectures, ensuring that the single-leg system can be seamlessly replicated and integrated to realize the
+        complete hexapod robot in future developments.
+\end{enumerate}
+
+
+\subsubsection{Thesis Structure}
+
+The remainder of this thesis is organized as follows:
+
+\begin{itemize}
+    \item Chapter \ref{ch:model} establishes the theoretical foundation. It details the mechanical design of the limb,
+        the Denavit--Hartenberg parameterization, and the Inverse Kinematics derivation. It also presents the
+        numerical model developed in Simscape Multibody, which serves as reference for validation.
+    \item Chapter \ref{ch:servomotor} focuses on the component-level engineering. It analyzes the limitations of
+        commercial servos and details the hardware and software design of the custom actuator module, including the
+        Switching PID control algorithm, ultimately evaluating the achieved improvements.
+    \item Chapter \ref{ch:prototype} describes the system integration and experimental validation. It outlines the
+        Hardware-in-the-Loop architecture and presents a quantitative comparison of the trajectory tracking performance
+        between the simulation and the physical prototype.
+    \item Chapter \ref{ch:conclusions} concludes the thesis by summarizing the achieved results, and outlining future
+        research directions.
+\end{itemize}
+

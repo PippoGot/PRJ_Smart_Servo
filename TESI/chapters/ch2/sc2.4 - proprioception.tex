@@ -1,0 +1,238 @@
+\section{Proprioception and Path Adaptation}
+\label{sec:proprioception}
+
+The open-loop control strategy and kinematic chain validated in Section 2.2 demonstrated the system's theoretical
+correctness under ideal conditions. However, this approach relies on the strict assumption of a perfectly flat
+and predictable terrain ($z_{ground} = p_{z,0}$). In a real-world unstructured environment, ground elevation
+varies unpredictably. Without feedback, a purely time-driven limb would either strike the ground prematurely
+— causing high mechanical stress and potential instability — or fail to reach it entirely, compromising propulsion.
+
+To relax this assumption and enable a "Blind Walking" \cite{brooks1989robot} capability, the system is
+augmented with basic proprioceptive sensing and a reactive control layer. Admittedly, while this approach does
+not fully solve the locomotion problem for extreme terrain (which would require a more structured control), it
+represents the fundamental first step towards robust locomotion: the ability to detect and adapt to the ground
+surface upon contact.
+
+
+\subsection{Contact Sensing and Architectural Shift}
+
+To detect the ground transition, the limb is equipped with a binary contact sensor located at the tip of the
+foot. This sensor acts as a logical limit switch, providing a boolean signal $S_c$ to the controller:
+
+$$
+  S_c =
+  \begin{cases}
+    1 & \text{if touching ground}\\
+    0 & \text{otherwise}
+  \end{cases}
+$$
+
+The introduction of this sensor demands a fundamental shift in the control architecture. The path planning
+problem transforms from a purely time-dependent function, $p_d(t)$, to a state-dependent system driven by
+discrete events.
+
+In the previous open-loop model, the gait phase was dictated by a global clock. In this adaptive model, the
+controller must monitor $S_c$ and be capable of interrupting the Swing Phase exactly at the moment of
+physical impact. Consequently, the trajectory generator cannot simply map a normalized time $t \in [0,1]$ to a
+position; it must be restructured to handle asynchronous events and variable phase durations.
+
+
+\subsection{Finite State Trajectory Generator}
+
+To implement this reactive logic robustly, a custom Finite State Machine (FSM, Figure \ref{fig:fsm_logic}) was designed
+\cite{cruse1990mechanisms}. This generator decouples the logical phase of the leg from the global clock,
+allowing for local adaptations while maintaining synchronization through a phase-advance mechanism.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[
+        ->,                       % Freccia su tutti i percorsi
+        >=Stealth,                % Stile punta freccia moderno
+        node distance=3.5cm and 4.5cm, % Distanza verticale e orizzontale
+        every state/.style={      % Stile globale per i cerchi degli stati
+            draw=black,
+            thick,
+            fill=gray!10,
+            minimum size=3cm,     % Dimensione fissa per cerchi uniformi
+            align=center          % Permette "a capo" dentro i cerchi
+        },
+        thick                     % Linee spesse
+    ]
+
+    % --- Definizione degli Stati ---
+
+    % 1. Stance 1 (Alto-Sinistra) - Stato Iniziale
+    \node[state, initial left, initial text={Start}] (S1) {Posterior\\Stance\\(Stance 1)};
+
+    % 2. Lift (Alto-Destra) - A destra di S1
+    \node[state] (Lift) [right=of S1] {Lift\\(Early Swing)};
+
+    % 3. Touch (Basso-Destra) - Sotto a Lift
+    \node[state] (Touch) [below=of Lift] {Touch\\(Late Swing)};
+
+    % 4. Stance 2 (Basso-Sinistra) - A sinistra di Touch (e sotto S1)
+    \node[state] (S2) [left=of Touch] {Anterior\\Stance\\(Stance 2)};
+
+    % --- Transizioni (Frecce) ---
+
+    % 1. Stance 1 -> Lift (Freccia verso destra)
+    \path (S1) edge node[above, align=center] {
+        $p_h \le -r$
+    } (Lift);
+
+    % 2. Lift -> Touch (Freccia verso il basso)
+    \path (Lift) edge node[right, align=left] {
+        $t > T_{lift}$
+    } (Touch);
+
+    % 3. Touch -> Stance 2 (Freccia verso sinistra)
+    \path (Touch) edge node[below, align=center] {
+        $S_c = 1$ \\
+        \textit{-- or --} \\
+        $t > T_{swing}$
+    } (S2);
+
+    % 4. Stance 2 -> Stance 1 (Freccia verso l'alto)
+    \path (S2) edge node[left, align=right] {
+        $p_h = 0$
+    } (S1);
+
+    \end{tikzpicture}
+    \caption{Finite State Machine for Adaptive Trajectory Generation.}
+    \label{fig:fsm_logic}
+\end{figure}
+
+
+\subsubsection{State 1: Posterior Stance (Stance 1)}
+
+The initial state of the cycle. Geometrically, it corresponds to the leg moving from the central rest
+position ($p_h = 0$) towards the posterior limit of the workspace ($p_h = -r$).
+
+\newpage
+The horizontal velocity is constant ($\dot{p}_h = -v$). The position is calculated via a discrete-time
+integrator, which is reset upon entering the state. The vertical position $z$ is held constant at the
+previously detected ground level.
+
+Upon entering this state, the system calculates a synchronization parameter, $\delta(k)$, to compensate for any
+timing drift accumulated in the previous cycle $k-1$. Recalling the duty factor $\beta$, the parameter is calculated as:
+\begin{equation}
+  \delta(k) = \left(1 - \frac{\beta}{2}\right) - t - \delta(k-1)
+\end{equation}
+where $t$ is the normalized global time counter. This ensures that the leg remains synchronized with the
+robot's gait rhythm, correcting for local timing variations.
+
+The system transitions to the Lift state when the horizontal position reaches the posterior stroke limit
+($p_h \le -r$).
+
+
+\subsubsection{State 2: Lift Phase (Early Swing)}
+
+This state represents the deterministic part of the swing phase, where the leg lifts off the ground to clear
+potential obstacles.
+
+The duration of this phase, $T_{lift}$, is dynamically calculated to absorb the phase error $\delta(k)$:
+\begin{equation}
+  T_{lift} = T_{touch} + \delta(k) = \frac{1-\beta}{2} + \delta(k)
+\end{equation}
+This variable duration is the mechanism that re-synchronizes the leg with the robot's global gait cycle.
+
+A quintic polynomial moves the foot vertically from its current height to the clearance height $H_{lift}$ over
+the duration $T_{lift}$, while another quintic polynomial starts repositioning the foot horizontally over the
+duration $T_{swing} = T_{lift} + T_{touch}$.
+
+The state transitions only when the timer exceeds the allocated time ($t > T_{lift}$), meaning the foot has
+reached the desired clearence height.
+
+
+\subsubsection{State 3: Touch Phase (Late Swing)}
+
+This state governs the descent of the leg. Crucially, this is where proprioceptive feedback is expected to trigger.
+
+The timer variable is adjusted to parametrize the descent polynomial $t' = t_{norm} - T_{lift}$, guiding the
+foot from $H_{lift}$ back towards the nominal ground ($z = 0$) over a fixed duration $T_{touch} = (1-\beta)/2$.
+The global timer is maintained to preserve continuity with the swing phase dynamics.
+
+The system exits this state under two distinct conditions:
+
+\begin{enumerate}
+  \item \textbf{Time-out:} The time expires ($t' > T_{touch}$ or equivalently $t > T_{swing}$), implying the leg
+    completed the full trajectory without contact (e.g. a hole or flat ground).
+  \item \textbf{Early Contact:} The sensor triggers ($S_c = 1$). This indicates the ground is higher
+    than expected (e.g. an obstacle).
+\end{enumerate}
+
+In both cases, the FSM immediately transitions to the next state.
+
+
+\subsubsection{State 4: Anterior Stance (Stance 2)}
+
+Following the touchdown, the leg enters the anterior portion of the stance phase, moving from the anterior limit
+($+r$ or the early contact point) back towards the central rest position ($p_h = 0$).
+
+The horizontal velocity returns to $-v$. The vertical position $z$ is locked at the specific height recorded at
+the moment of the Touch $\to$ Anterior Stance transition. This allows the robot to walk "on top" of obstacles rather
+than trying to push through them.
+
+The cycle completes when the leg crosses the zero-point of the workspace ($p_h = 0$), triggering the transition
+back to Posterior Stance. At this crossing, the cycle index $k$ increments, and the loop repeats.
+
+
+\subsection{Adaptive Simulation Results}
+
+To validate the proprioceptive controller, the Simscape environment was modified to include an uneven terrain
+profile.
+
+Figure \ref{fig:adaptive_results} provides a direct comparison between the nominal, time-based trajectory
+and the reactive, adaptive trajectory generated by the FSM in the presence of uneven terrain. For visual
+clarity, these plots represent the trajectory primitives defined in the $Z\psi$-plane.
+
+
+\subsubsection{Vertical Adaptation}
+
+The bottom plot (Vertical Trajectory) clearly demonstrates the effectiveness of the proprioceptive loop. When
+the limb encounters a positive obstacle (represented by the gray terrain profile), the adaptive trajectory
+deviates from the nominal path exactly at the moment of impact. Unlike the nominal reference, which would
+attempt to drive the foot through the terrain, the adaptive system triggers an immediate transition from the Touch
+Phase to the Stance Phase. The vertical position is subsequently maintained at the obstacle's height for the
+duration of the propulsion stroke, effectively allowing the robot to walk on top of the irregularity rather than
+pushing against it.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.98\textwidth]{images/adaptive_comparison.pdf}
+    \caption{Adaptive Gait Simulation with the New FSM Trajectory Generator.}
+    \label{fig:adaptive_results}
+\end{figure}
+
+
+\subsubsection{Synchronization and Phase Correction}
+
+Despite the timing disturbances introduced by early ground contacts, the top plot (Horizontal Trajectory) shows
+that the system maintains robust synchronization. While the early impact inevitably causes a minor phase lead
+(visible as a slight horizontal shift between the purple and green waves), the trajectory does not drift
+indefinitely. Instead, when the obstacle is no longer present, the cycle realigns with the non-adaptive ideal
+trajectory. This proves that the phase synchronization mechanism successfully compensates for these delays in
+subsequent cycles, keeping the limb's rhythm bounded and consistent with the global gait cycle.
+
+
+\subsubsection{Continuity and Stability Considerations}
+
+There is key consideration to address regarding the kinematic continuity at the impact point: while the
+generated trajectory primitives are designed to be $C^2$ continuous, the very nature of the "Blind Walk"
+implies that the exact moment of touchdown is unpredictable. Consequently, when the ground is struck earlier
+than planned, the vertical velocity changes abruptly from the descent speed to zero (relative to the terrain).
+Therefore, at these specific transition points, strict $C^2$ continuity cannot be guaranteed.
+
+Secondly, while effective as a proof of concept, this adaptive generator has specific limitations. For starters,
+it currently compensates only for elevated obstacles (protrusions), neglecting potential depressions or holes
+in the terrain. Also, unlike the nominal generator, this reactive strategy does not inherently guarantee that
+the modified path remains within the Optimal Workspace Region (OWR); without explicit saturation limits, the
+adaptation could potentially request kinematically unfeasible positions.
+
+Another important consideration to keep in mind is the dynamic shortening of the foot's contact time introduces
+significant stability challenges; therefore, a rigorous balance study is essential for the future implementation
+of the full robot.
+
+In summary, this strategy is designed specifically to handle minor terrain irregularities (roughness) rather
+than large obstacles, representing a solid foundation for higher level obstacle avoidance planning and control
+\cite{saranli2001rhex}.

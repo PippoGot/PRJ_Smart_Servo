@@ -1,0 +1,5 @@
+\babel@toc {english}{}\relax 
+\beamer@sectionintoc {1}{Thesis Objective}{3}{0}{1}
+\beamer@sectionintoc {2}{Actuator Module}{4}{0}{2}
+\beamer@sectionintoc {3}{Robotic Limb}{9}{0}{3}
+\beamer@sectionintoc {4}{Conclusions}{16}{0}{4}

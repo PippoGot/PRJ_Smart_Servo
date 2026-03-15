@@ -28,10 +28,11 @@ namespace RegAddr {
 	// Servo Motor State
 	constexpr uint8_t DesiredPosition 		= 0x20;
 	constexpr uint8_t ActualPosition 		= 0x21;
-	constexpr uint8_t MotorCurrent	 		= 0x22;
-	constexpr uint8_t MotorVoltage 			= 0x23;
-	constexpr uint8_t MotorPower 			= 0x24;
-	constexpr uint8_t DutyCycle 			= 0x25;
+	constexpr uint8_t PositionOffset		= 0x22;
+	constexpr uint8_t MotorCurrent	 		= 0x23;
+	constexpr uint8_t MotorVoltage 			= 0x24;
+	constexpr uint8_t MotorPower 			= 0x25;
+	constexpr uint8_t DutyCycle 			= 0x26;
 
 	// AS5600 Position Sensor
 	constexpr uint8_t ZeroPosition 			= 0x40;
@@ -68,13 +69,14 @@ namespace DefaultSettings {
 	constexpr uint8_t AS5600_Address 		= 0x36;
 	constexpr uint16_t AS5600_ZeroPos 		= 0x000;
 	constexpr uint16_t AS5600_StopPos 		= 0xFFF;
+	constexpr int32_t AS5600_Offset			= -2048;
 
 	// INA219 Current Sensor
 	constexpr uint8_t INA219_Address 		= 0x40;
 	constexpr uint16_t INA219_Calibration 	= 0x0000;
 
 	// Slave Configuration
-	constexpr uint8_t SlaveAddress			= 0x51;
+	constexpr uint8_t SlaveAddress			= 0x52;
 }
 
 

@@ -1,0 +1,16 @@
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+This thesis presents a comprehensive, top-down engineering approach to the design and control of a modular robotic
+limb for a hexapod platform. The primary objective is to overcome the performance limitations inherent in low-cost
+commercial actuation, which typically hinder precise legged locomotion.
+
+The research begins with the kinematic modeling and digital simulation of the limb in the MATLAB/Simulink environment,
+establishing a simulation model to validate trajectory planning and inverse kinematics algorithms. The core contribution
+of this work is the development of a novel, custom "Smart Actuator" module designed to replace standard hobbyist
+servo-motors. This custom embedded solution integrates a high-resolution magnetic encoder, a high-current H-bridge
+driver, and an STM32 microcontroller. Crucially, it implements a non-linear Switching PID control strategy specifically
+tuned to mitigate stick-slip friction phenomena and mechanical backlash.
+
+The system is validated through a Hardware-in-the-Loop (HIL) architecture, bridging the simulation environment with the
+physical prototype. Experimental benchmarking demonstrates a dramatic improvement in performance.

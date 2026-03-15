@@ -17,9 +17,6 @@
 #include "CONFIG.h"
 
 
-#define PI 3.14159265f
-
-
 class MG996R {
 
 public:
@@ -84,8 +81,9 @@ private:
 	I2C::VirtualRegister<float> regOutputMin{RegAddr::OutputMin, _registerMap};
 
 	// Servo State
-	I2C::VirtualRegister<uint16_t> regDesiredPosition{RegAddr::DesiredPosition, _registerMap};
+	I2C::VirtualRegister<int32_t> regDesiredPosition{RegAddr::DesiredPosition, _registerMap};
 	I2C::VirtualRegister<int32_t> regActualPosition{RegAddr::ActualPosition, _registerMap, I2C::RegisterMode::ReadOnly};
+	I2C::VirtualRegister<int32_t> regPositionOffset{RegAddr::PositionOffset, _registerMap};
 	I2C::VirtualRegister<uint16_t> regMotorCurrent{RegAddr::MotorCurrent, _registerMap, I2C::RegisterMode::ReadOnly};
 	I2C::VirtualRegister<uint16_t> regMotorVoltage{RegAddr::MotorVoltage, _registerMap, I2C::RegisterMode::ReadOnly};
 	I2C::VirtualRegister<uint16_t> regMotorPower{RegAddr::MotorPower, _registerMap, I2C::RegisterMode::ReadOnly};
@@ -109,7 +107,7 @@ private:
 
 	AngleUnwrapper _unwrapper;
 
-	SWPID _controller{
+	SwitchingPID _controller{
 		DefaultSettings::TimeStep,
 		DefaultSettings::ProportionalGain,
 		DefaultSettings::IntegralGain,

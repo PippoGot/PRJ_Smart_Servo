@@ -11,26 +11,40 @@ C:\ST\STM32CubeIDE_1.13.2\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.external
 ../Core/Inc/i2c_device.hpp:139:15:void I2C::Device::init(I2C_HandleTypeDef*)	1
 ../Core/Inc/AS5600.hpp:304:14:bool AS5600::startPosition(uint16_t)	1
 ../Core/Inc/AS5600.hpp:315:14:bool AS5600::stopPosition(uint16_t)	1
+C:\ST\STM32CubeIDE_1.13.2\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344\tools\bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/include/c++/13.3.1/cmath:234:3:constexpr float std::fabs(float)	1
+../Core/Inc/control.hpp:69:8:virtual float DiscreteDelay::step(float)	1
+../Core/Inc/control.hpp:75:8:float DiscreteDelay::state()	1
+../Core/Inc/control.hpp:77:7:virtual void DiscreteDelay::reset(float)	1
+../Core/Inc/control.hpp:92:8:virtual float DiscreteIntegrator::step(float)	2
+../Core/Inc/control.hpp:108:8:float DiscreteIntegrator::state()	1
+../Core/Inc/control.hpp:110:7:virtual void DiscreteIntegrator::reset(float)	1
+../Core/Inc/control.hpp:129:8:virtual float DiscreteDerivative::step(float)	2
+../Core/Inc/control.hpp:160:8:virtual float GlitchFilter::step(float)	4
+../Core/Inc/control.hpp:43:16:constexpr int mth::sign(const T&) [with T = float]	3
+../Core/Inc/control.hpp:245:8:float SwitchingPID::step(float, float)	8
+../Core/Inc/control.hpp:315:7:void SwitchingPID::changeParameter(ControllerParam, float)	8
+../Core/Inc/DRV8870.hpp:64:14:void DRV8870::stop()	1
 ../Core/Src/MG996R.cpp:4:6:void MG996R::init(I2C_HandleTypeDef*, I2C_HandleTypeDef*, TIM_HandleTypeDef*, TIM_HandleTypeDef*)	1
-../Core/Src/MG996R.cpp:58:27:MG996R::bindCallbacks()::<lambda()>	1
-../Core/Src/MG996R.cpp:64:23:MG996R::bindCallbacks()::<lambda()>	1
-../Core/Src/MG996R.cpp:70:25:MG996R::bindCallbacks()::<lambda()>	1
-../Core/Src/MG996R.cpp:76:24:MG996R::bindCallbacks()::<lambda()>	1
-../Core/Src/MG996R.cpp:82:24:MG996R::bindCallbacks()::<lambda()>	1
-../Core/Src/MG996R.cpp:88:20:MG996R::bindCallbacks()::<lambda()>	1
-../Core/Src/MG996R.cpp:94:20:MG996R::bindCallbacks()::<lambda()>	1
-../Core/Src/MG996R.cpp:101:23:MG996R::bindCallbacks()::<lambda()>	1
-../Core/Src/MG996R.cpp:102:23:MG996R::bindCallbacks()::<lambda()>	1
-../Core/Src/MG996R.cpp:105:24:MG996R::bindCallbacks()::<lambda()>	1
-../Core/Src/MG996R.cpp:56:6:void MG996R::bindCallbacks()	1
-../Core/Src/MG996R.cpp:108:6:void MG996R::controlLoop()	3
+../Core/Src/MG996R.cpp:55:27:MG996R::bindCallbacks()::<lambda()>	1
+../Core/Src/MG996R.cpp:61:23:MG996R::bindCallbacks()::<lambda()>	1
+../Core/Src/MG996R.cpp:67:25:MG996R::bindCallbacks()::<lambda()>	1
+../Core/Src/MG996R.cpp:73:24:MG996R::bindCallbacks()::<lambda()>	1
+../Core/Src/MG996R.cpp:79:24:MG996R::bindCallbacks()::<lambda()>	1
+../Core/Src/MG996R.cpp:85:20:MG996R::bindCallbacks()::<lambda()>	1
+../Core/Src/MG996R.cpp:91:20:MG996R::bindCallbacks()::<lambda()>	1
+../Core/Src/MG996R.cpp:98:23:MG996R::bindCallbacks()::<lambda()>	1
+../Core/Src/MG996R.cpp:99:23:MG996R::bindCallbacks()::<lambda()>	1
+../Core/Src/MG996R.cpp:102:24:MG996R::bindCallbacks()::<lambda()>	1
+../Core/Src/MG996R.cpp:53:6:void MG996R::bindCallbacks()	1
+../Core/Src/MG996R.cpp:105:6:void MG996R::controlLoop()	3
 C:\ST\STM32CubeIDE_1.13.2\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344\tools\bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/include/c++/13.3.1/bits/std_function.h:239:5:constexpr std::_Function_base::_Function_base()	1
 C:\ST\STM32CubeIDE_1.13.2\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344\tools\bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/include/c++/13.3.1/bits/std_function.h:573:16:)>::operator bool() const [with _Res = void; _ArgTypes = {}]	1
 C:\ST\STM32CubeIDE_1.13.2\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344\tools\bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/include/c++/13.3.1/bits/std_function.h:587:7:) const [with _Res = void; _ArgTypes = {}]	1
 C:\ST\STM32CubeIDE_1.13.2\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344\tools\bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/include/c++/13.3.1/bits/std_function.h:469:7:)>&) [with _Res = void; _ArgTypes = {}]	1
 ../Core/Inc/i2c_device.hpp:207:21:HAL_StatusTypeDef I2C::Device::write(uint8_t, T, byte::EndianType) [with T = short unsigned int]	2
+../Core/Inc/control.hpp:19:17:constexpr T mth::clamp(const T&, const T&, const T&) [with T = float]	3
+../Core/Inc/control.hpp:31:14:constexpr T mth::deadzone(const T&, const T&, const T&) [with T = float]	1
 ../Core/Inc/i2c_register.hpp:141:11:void I2C::VirtualRegister<T>::typedSet(T) [with T = long int]	2
-../Core/Inc/i2c_register.hpp:141:11:void I2C::VirtualRegister<T>::typedSet(T) [with T = short unsigned int]	2
 ../Core/Inc/i2c_register.hpp:135:8:T I2C::VirtualRegister<T>::typedGet() const [with T = float]	1
 C:\ST\STM32CubeIDE_1.13.2\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344\tools\bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/include/c++/13.3.1/bits/std_function.h:435:2:)>::function(_Functor&&) [with _Functor = MG996R::bindCallbacks()::<lambda()>; _Constraints = void; _Res = void; _ArgTypes = {}]	2
 C:\ST\STM32CubeIDE_1.13.2\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344\tools\bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/include/c++/13.3.1/bits/std_function.h:435:2:)>::function(_Functor&&) [with _Functor = MG996R::bindCallbacks()::<lambda()>; _Constraints = void; _Res = void; _ArgTypes = {}]	2

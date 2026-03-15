@@ -7,6 +7,7 @@ clc
 addpath(genpath('Data'));
 addpath(genpath('Modular Models'));
 addpath(genpath('Scripts'));
+addpath(genpath('Arm Simulation'));
  
 %% Model Parameters
 
